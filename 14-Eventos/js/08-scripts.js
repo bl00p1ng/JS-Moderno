@@ -13,12 +13,13 @@ parrafo2.classList.add('titulo');
 const parrafo3 = document.createElement('p');
 parrafo3.textContent = '$800 por persona';
 parrafo3.classList.add('precio');
+parrafo3.onclick = () => newFunction(1);
 
 // crear el div...
 const info = document.createElement('div');
 info.classList.add('info');
-info.appendChild(parrafo1)
-info.appendChild(parrafo2)
+info.appendChild(parrafo1);
+info.appendChild(parrafo2);
 info.appendChild(parrafo3);
 
 // Vamos a crear la imagen
@@ -29,7 +30,7 @@ imagen.src = 'img/hacer2.jpg';
 const contenedorCard = document.createElement('div');
 contenedorCard.classList.add('contenedorCard');
 
-// Vamos a asignar la imagen al card...
+// Vamos a asignar la imagen al card
 contenedorCard.appendChild(imagen);
 
 // y el info
@@ -38,3 +39,7 @@ contenedorCard.appendChild(info);
 // Insertarlo en el HTML...
 const contenedor = document.querySelector('.hacer .contenedor-cards');
 contenedor.appendChild(contenedorCard); // al inicio info
+
+function newFunction(id) {
+    console.log('Desde nueva función', id);
+}
