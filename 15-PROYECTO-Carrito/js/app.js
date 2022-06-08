@@ -48,9 +48,23 @@ function cartHTML() {
     // Recorre el array del carrito y genera el HTML
     cartItems.forEach(course => {
         row = document.createElement('tr');
+
+        const {image, title, price, id, quantity} = course;
         row.innerHTML = `
             <td>
-                ${course.title}
+                <img src="${image}" alt="Imagen del curso" width="100">
+            </td>
+            <td>
+                ${title}
+            </td>
+            <td>
+                ${price}
+            </td>
+            <td>
+                ${quantity}
+            </td>
+            <td>
+                <a href="#" class="borrar-curso" data-id="${id}"> X </a>
             </td>
         `;
 
@@ -66,6 +80,6 @@ function clearHTML() {
 
     // Forma rápida
     while (cartContainer.firstChild) {
-        cartContainer.removeChild(cartContainer.firstChild());
+        cartContainer.removeChild(cartContainer.firstChild);
     }
 }
