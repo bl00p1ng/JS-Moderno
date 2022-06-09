@@ -33,8 +33,25 @@ function extractCourseInfo(course) {
         quantity: 1
     };
 
-    // Agregar los datos del curso al carrito
-    cartItems = [...cartItems, courseInfo];
+    // Comprobar si un elemento ya existe en el carrito
+    const exist = cartItems.some(course => course.id === courseInfo.id);
+
+    if (exist) {
+        // Actualizar cantidad
+        const courses = cartItems.map(course => {
+            if (course.id === courseInfo.id) {
+                course.quantity++;
+                return course;  // Retorna objeto actualizado
+            } else {
+                return course;  // Retorna objetos que no son duplicados
+            }
+        });
+        cartItems = [...courses];
+    } else {
+        // Agregar los datos del curso al carrito
+        cartItems = [...cartItems, courseInfo];
+    }
+
 
     // Mostrar el curso agregado en el carrito
     cartHTML();
