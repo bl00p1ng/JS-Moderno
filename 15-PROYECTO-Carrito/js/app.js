@@ -10,9 +10,14 @@ loadEventListeners();
 function loadEventListeners() {
     // Agregar un curso al presionar "Agregar al carrito"
     coursesList.addEventListener('click', addCourse);
+
+    // Eliminar curso del carrito
+    cart.addEventListener('click', deleteCourse);
 }
 
 // Funciones
+
+// Agregar curso
 function addCourse(e) {
     e.preventDefault();
 
@@ -98,5 +103,19 @@ function clearHTML() {
     // Forma rápida
     while (cartContainer.firstChild) {
         cartContainer.removeChild(cartContainer.firstChild);
+    }
+}
+
+// Eliminar curso
+function deleteCourse(e) {
+    e.preventDefault();
+
+    if(e.target.classList.contains('borrar-curso')) {
+        const courseId = e.target.getAttribute('data-id');
+
+        // Eliminar un curso del array cartItems por su data-id
+        cartItems = cartItems.filter(course => course.id !== courseId);
+
+        cartHTML();
     }
 }
