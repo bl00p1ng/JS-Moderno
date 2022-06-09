@@ -26,9 +26,19 @@ function startApp() {
 function validateForm(e) {
     // Validar que el campo no este vacío
     if (e.target.value.length > 0) {
-        console.log('Si hay algo');
+        // Limpiar mensajes de error
+        error = document.querySelector('p.error');
+
+        if (error) {
+            error.remove();
+        }
+
+        // Cambiar el color del borde si el campo tiene texto
+        e.target.classList.remove('border', 'border-red-500');
+        e.target.classList.add('border', 'border-green-500');
     } else {
         // Agregar bordes rojos al campo vacio
+        e.target.classList.remove('border', 'border-green-500');
         e.target.classList.add('border', 'border-red-500');
 
         // Mostrar un mensaje de error
@@ -38,9 +48,24 @@ function validateForm(e) {
     // Validar email
     if (e.target.type === 'email') {
         // Este método funciona pero lo ideal es usar regEx
-        const result = e.target.value.indexOf('@');
+        // const result = e.target.value.indexOf('@');
+        const regEx = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-        if (result < 0) {
+        if (regEx.test(e.target.value)) {
+            // Limpiar mensajes de error
+            error = document.querySelector('p.error');
+            if (error) {
+                error.remove();
+            }
+    
+            // Cambiar el color del borde si el email es válido
+            e.target.classList.remove('border', 'border-red-500');
+            e.target.classList.add('border', 'border-green-500');
+        } else {
+            // Agregar bordes rojos si el email es incorrecto
+            e.target.classList.remove('border', 'border-green-500');
+            e.target.classList.add('border', 'border-red-500');
+
             showError('El email no es válido');
         }
     }
