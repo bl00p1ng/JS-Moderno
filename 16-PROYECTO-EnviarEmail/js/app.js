@@ -6,6 +6,8 @@ const email = document.querySelector('#email');
 const subject = document.querySelector('#asunto');
 const msg = document.querySelector('#mensaje');
 
+const regEx = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
 // FUNCIONES
 eventListeners();
 function eventListeners() {
@@ -49,7 +51,6 @@ function validateForm(e) {
     if (e.target.type === 'email') {
         // Este método funciona pero lo ideal es usar regEx
         // const result = e.target.value.indexOf('@');
-        const regEx = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
         if (regEx.test(e.target.value)) {
             // Limpiar mensajes de error
@@ -68,6 +69,13 @@ function validateForm(e) {
 
             showError('El email no es válido');
         }
+    }
+
+    if (regEx.test(email.value) !== '' && subject.value !== '' && msg.value !== '') {
+        sendBtn.setAttribute('disable', 'false');
+        sendBtn.classList.remove('cursor-not-allowed', 'opacity-50');
+    } else {
+        console.log('Hay campos por validar');
     }
 }
 
