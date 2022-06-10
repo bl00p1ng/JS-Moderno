@@ -33,6 +33,9 @@ document.addEventListener('DOMContentLoaded', () => {
 // Event Listener de los select de búsqueda
 brand.addEventListener('change', e => {
     searchData.brand = e.target.value;
+
+    // Filtrar resultados
+    filterCars();
 });
 
 year.addEventListener('change', e => {
@@ -81,4 +84,19 @@ function fillYearSelect() {
         option.textContent = i;
         year.appendChild(option);
     }
+}
+
+// Filtrar el resultado de la búsqueda
+function filterCars() {
+    const result = cars.filter(filterBrand);
+    console.log(result);
+}
+
+// Filtrar por marca
+function filterBrand(car) {
+    if (car.brand) {
+        return car.brand === searchData.brand;
+    }
+
+    return car;
 }
