@@ -75,7 +75,6 @@ transmission.addEventListener('change', e => {
 
 color.addEventListener('change', e => {
     searchData.color = e.target.value;
-    console.table(searchData);
 
      // Filtrar resultados
      filterCars();
@@ -117,8 +116,13 @@ function fillYearSelect() {
 // Filtrar el resultado de la búsqueda
 function filterCars() {
     const result = cars.filter(filterBrand).filter(filterYear).filter(filterMinPrice).filter(filterMaxPrice).filter(filterDoors).filter(filterTransmission).filter(filterColor);
-    // console.log(result);
-    showCars(result);
+    
+    if(result.length) {
+        showCars(result);
+    } else {
+        noResults();
+    }
+
 }
 
 // Filtrar por marca
@@ -196,4 +200,20 @@ function filterColor(car) {
     }
 
     return car;
+}
+
+// Muestra un mensaje cuando no hay resultados
+function noResults() {
+    // Limpiar el HTML
+    clearHTML();
+
+    const noResult = document.createElement('div');
+    noResult.classList.add('alerta', 'error');
+
+    const msg = document.createElement('p');
+    msg.textContent = 'No se encontraron resultados. Intenta con otros términos de búsqueda';
+
+    noResult.appendChild(msg);
+
+    result.appendChild(noResult);
 }
