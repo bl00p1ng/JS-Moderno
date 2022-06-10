@@ -39,7 +39,10 @@ brand.addEventListener('change', e => {
 });
 
 year.addEventListener('change', e => {
-    searchData.year = e.target.value;
+    searchData.year = parseInt(e.target.value);
+
+    // Filtrar resultados
+    filterCars();
 });
 
 minPrice.addEventListener('change', e => {
@@ -88,14 +91,27 @@ function fillYearSelect() {
 
 // Filtrar el resultado de la búsqueda
 function filterCars() {
-    const result = cars.filter(filterBrand);
+    const result = cars.filter(filterBrand).filter(filterYear);
     console.log(result);
 }
 
 // Filtrar por marca
 function filterBrand(car) {
-    if (car.brand) {
-        return car.brand === searchData.brand;
+    const {brand} = searchData;
+
+    if (brand) {
+        return car.brand === brand;
+    }
+
+    return car;
+}
+
+// Filtrar por año
+function filterYear(car) {
+    const {year} = searchData;
+
+    if (year) {
+        return car.year === year;
     }
 
     return car;
