@@ -1,5 +1,6 @@
 // VARIABLES
 const sendBtn = document.querySelector('#enviar');
+const resetBtn = document.querySelector('#resetBtn');
 const form = document.querySelector('#enviar-mail');
 // Campos del form
 const email = document.querySelector('#email');
@@ -18,10 +19,17 @@ function eventListeners() {
     email.addEventListener('blur', validateForm);
     subject.addEventListener('blur', validateForm);
     msg.addEventListener('blur', validateForm);
+
+    // Resetear form
+    resetBtn.addEventListener('click', formReset);
+
+    // Enviar email
+    sendBtn.addEventListener('click', sendMail);
 }
 
 function startApp() {
-    console.log('Iniciando...');
+    sendBtn.setAttribute('disable', 'true');
+    sendBtn.classList.add('cursor-not-allowed', 'opacity-50');
 }
 
 // Validar el formulario
@@ -71,11 +79,12 @@ function validateForm(e) {
         }
     }
 
-    if (regEx.test(email.value) !== '' && subject.value !== '' && msg.value !== '') {
+    if (regEx.test(email.value) && subject.value !== '' && msg.value !== '') {
         sendBtn.setAttribute('disable', 'false');
         sendBtn.classList.remove('cursor-not-allowed', 'opacity-50');
     } else {
-        console.log('Hay campos por validar');
+        sendBtn.setAttribute('disable', 'true');
+        sendBtn.classList.add('cursor-not-allowed', 'opacity-50');
     }
 }
 
@@ -90,4 +99,37 @@ function showError(msg) {
     if (errors.length === 0) {
         form.appendChild(errorMsg);
     }
+}
+
+// Simular envio de email
+function sendMail(e) {
+    e.preventDefault();
+
+    // Mostrar el spinner
+    const spinner = document.querySelector('#spinner');
+    spinner.style.display = 'flex';
+
+    // Ocultar spinner después de 3 segundos y mostrar un mensaje
+    setTimeout(() => {
+        spinner.style.display = 'none';
+
+        // Mensaje de envio exitoso
+        sendMsg = document.createElement('p');
+        sendMsg.textContent = 'El mail se envio correctamente';
+        sendMsg.classList.add('border', 'border-blue-500', 'background-blue-100', 'text-blue-500', 'p-3', 'mb-5', 'text-center');
+        form.insertBefore(sendMsg, spinner);
+
+        // Eliminar mensaje de envio exitoso después de 5 segundos
+        setTimeout(() => {
+            sendMsg.remove();
+            formReset();
+        }, 5000);
+    }, 3000);
+}
+
+// Resetear form
+function formReset(e) {
+    e.preventDefault();
+    form.reset();
+    startApp();
 }
