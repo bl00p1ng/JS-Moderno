@@ -60,16 +60,25 @@ maxPrice.addEventListener('change', e => {
 });
 
 doors.addEventListener('change', e => {
-    searchData.doors = e.target.value;
+    searchData.doors = parseInt(e.target.value);
+
+    // Filtrar resultados
+    filterCars();
 });
 
 transmission.addEventListener('change', e => {
     searchData.transmission = e.target.value;
+
+     // Filtrar resultados
+     filterCars();
 });
 
 color.addEventListener('change', e => {
     searchData.color = e.target.value;
     console.table(searchData);
+
+     // Filtrar resultados
+     filterCars();
 });
 
 
@@ -107,7 +116,7 @@ function fillYearSelect() {
 
 // Filtrar el resultado de la búsqueda
 function filterCars() {
-    const result = cars.filter(filterBrand).filter(filterYear).filter(filterMinPrice).filter(filterMaxPrice);
+    const result = cars.filter(filterBrand).filter(filterYear).filter(filterMinPrice).filter(filterMaxPrice).filter(filterDoors).filter(filterTransmission).filter(filterColor);
     // console.log(result);
     showCars(result);
 }
@@ -151,6 +160,39 @@ function filterMaxPrice(car) {
 
     if (maxPrice) {
         return car.price <= maxPrice;
+    }
+
+    return car;
+}
+
+// Filtrar por puertas
+function filterDoors(car) {
+    const {doors} = searchData;
+
+    if (doors) {
+        return car.doors === doors;
+    }
+
+    return car;
+}
+
+// Filtrar pro transmisión
+function filterTransmission(car) {
+    const {transmission} = searchData;
+
+    if (transmission) {
+        return car.transmission === transmission;
+    }
+
+    return car;
+}
+
+// Filtrar por color
+function filterColor(car) {
+    const {color} = searchData;
+
+    if (color) {
+        return car.color === color;
     }
 
     return car;
