@@ -24,7 +24,19 @@ function addTweet(e) {
         return;  // Detiene ejecución de la función
     }
 
-    console.log('Test');
+    const tweetData = {
+        id: Date.now(),
+        tweet  // JS lo entiende como la misma llave y valor
+    };
+
+    // Agregar tweet al array de tweets
+    tweets = [...tweets, tweetData];
+
+    // Mostrar Tweet en el HTML
+    showTweets();
+
+    // Reiniciar form
+    form.reset();
 }
 
 // Mostrar un mensaje de error
@@ -41,4 +53,31 @@ function showError(msg) {
     setTimeout(() => {
         error.remove();
     }, 3000);
+}
+
+// Mostrar los tweets en el HTML
+function showTweets() {
+    // Limpiar HTML
+    clearHTML();
+
+    if (tweets.length > 0) {
+        const ul = document.createElement('ul');
+
+        tweets.forEach(tweet => {
+            // Crear HTML
+            const li = document.createElement('li');
+            li.textContent = tweet.tweet;
+
+            ul.appendChild(li);
+        });
+
+        tweetsList.appendChild(ul);
+    }
+}
+
+// Eliminar HTML existente
+function clearHTML() {
+    while (tweetsList.firstChild) {
+        tweetsList.removeChild(tweetsList.firstChild);
+    }
 }
