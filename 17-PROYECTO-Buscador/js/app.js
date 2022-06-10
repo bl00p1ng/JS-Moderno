@@ -47,10 +47,16 @@ year.addEventListener('change', e => {
 
 minPrice.addEventListener('change', e => {
     searchData.minPrice = e.target.value;
+
+    // Filtrar resultados
+    filterCars();
 });
 
 maxPrice.addEventListener('change', e => {
     searchData.maxPrice = e.target.value;
+
+    // Filtrar resultados
+    filterCars();
 });
 
 doors.addEventListener('change', e => {
@@ -101,7 +107,7 @@ function fillYearSelect() {
 
 // Filtrar el resultado de la búsqueda
 function filterCars() {
-    const result = cars.filter(filterBrand).filter(filterYear);
+    const result = cars.filter(filterBrand).filter(filterYear).filter(filterMinPrice).filter(filterMaxPrice);
     // console.log(result);
     showCars(result);
 }
@@ -123,6 +129,28 @@ function filterYear(car) {
 
     if (year) {
         return car.year === year;
+    }
+
+    return car;
+}
+
+// Filtrar por precio mínimo
+function filterMinPrice(car) {
+    const {minPrice} = searchData;
+
+    if (minPrice) {
+        return car.price >= minPrice;
+    }
+
+    return car;
+}
+
+// Filtrar por precio máximo
+function filterMaxPrice(car) {
+    const {maxPrice} = searchData;
+
+    if (maxPrice) {
+        return car.price <= maxPrice;
     }
 
     return car;
