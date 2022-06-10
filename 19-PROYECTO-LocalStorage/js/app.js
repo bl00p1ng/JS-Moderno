@@ -72,8 +72,21 @@ function showTweets() {
 
         tweets.forEach(tweet => {
             // Crear HTML
+
+            // Crear un botón para eliminar Tweet
+            const deleteBtn = document.createElement('a');
+            deleteBtn.classList.add('borrar-tweet');
+            deleteBtn.textContent = 'X';
+
+            deleteBtn.onclick = () => {
+                deleteTweet(tweet.id);
+            };
+
+            // Crear el HTML para mostrar el Tweet
             const li = document.createElement('li');
             li.textContent = tweet.tweet;
+            // Agregar boton de eliminar
+            li.appendChild(deleteBtn);
 
             ul.appendChild(li);
         });
@@ -95,4 +108,10 @@ function clearHTML() {
 // Cargar datos en localStorage
 function syncStorage() {
     localStorage.setItem('tweets', JSON.stringify(tweets));
+}
+
+// Borrar un tweet
+function deleteTweet(id) {
+    tweets = tweets.filter(tweet => tweet.id !== id);
+    showTweets();
 }
