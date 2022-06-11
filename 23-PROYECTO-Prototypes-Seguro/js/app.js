@@ -25,6 +25,32 @@ UI.prototype.fillYear = () => {
     }
 };
 
+// Mostrar mensajes de alerta
+UI.prototype.showMsg = (msg, alertType) => {
+    const div = document.createElement('div');
+    const p = document.createElement('p');
+
+    p.textContent = msg;
+    div.classList.add('mensaje', 'mt-10');
+
+    // Dar estilos según el tipo de mensaje
+    if (alertType == 'error') {
+        div.classList.add('error');
+    } else {
+        div.classList.add('correcto');
+    }
+
+    // Insertar HTML
+    div.appendChild(p);
+    const form = document.querySelector('#cotizar-seguro');
+    form.insertBefore(div, document.querySelector('#resultado'));
+
+    // Ocultar mensaje después de 3 segundos
+    setTimeout(() => {
+        div.remove();
+    }, 3000);
+};
+
 // Instanciar UI
 const ui = new UI();
 
@@ -54,8 +80,9 @@ function quoteInsurance(e) {
     const type = document.querySelector('input[name="tipo"]:checked').value;
 
     if (brand === '' || year === '' || type === '') {
-        console.log('No paso la validación');
-    } else {
-        console.log('Si paso la validación');
+        ui.showMsg('Todos los campos son obligatorios', 'error');
+        return;
     }
+
+    ui.showMsg('Cotizando Seguro...', 'success');
 }
