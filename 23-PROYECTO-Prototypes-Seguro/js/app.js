@@ -97,6 +97,50 @@ UI.prototype.showMsg = (msg, alertType) => {
     }, 3000);
 };
 
+// Mostrar el total de la cotización
+UI.prototype.showResult = (insurance, total) => {
+    const {brand, year, type} = insurance;
+
+    // Validar la marca correspondiente
+    let brandText;
+
+    switch (brand) {
+        case '1':
+            brandText = 'Americano';
+            break;
+        case '2':
+            brandText = 'Asiatico';
+            break;
+        case '3':
+            brandText = 'Europeo';
+            break;
+        default:
+            break;
+    }
+
+    // Crear el resultado
+    const result = document.querySelector('#resultado');
+    div = document.createElement('div');
+    div.classList.add('mt-10');
+    div.innerHTML = `
+        <p class="header">Tu resumen</p>
+        <p class="font-bold">Marca: <span class="font-normal">${brandText}</span></p>
+        <p class="font-bold">Año: <span class="font-normal">${year}</span></p>
+        <p class="font-bold">Tipo de seguro: <span class="font-normal capitalize">${type}</span></p>
+        <p class="font-bold">Total: <span class="font-normal">$${total}</span></p>
+    `;
+
+    // Mostrar el spinner
+    const spinner = document.querySelector('#cargando');
+    spinner.style.display = 'block';
+
+    // Ocultar spinner después de 3 segundos y mostrar el total
+    setTimeout(() => {
+        spinner.style.display = 'none';
+        result.appendChild(div);
+    }, 3000);
+};
+
 // Instanciar UI
 const ui = new UI();
 
@@ -132,7 +176,17 @@ function getData(e) {
 
     ui.showMsg('Cotizando Seguro...', 'success');
 
+    // Ocultar cotizaciones anteriores
+    const results = document.querySelector('#resultado div');
+    if (results != null) {
+        results.remove();
+    }
+
     // Instanciaar el seguro
     const insurance = new Insurance(brand, year, type);
-    insurance.quoteInsurance();
+
+    // Cotizar el seguro
+    const total = insurance.quoteInsurance();
+    // Mostrar el total en la interfaz
+    ui.showResult(insurance, total);
 }
