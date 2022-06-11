@@ -33,3 +33,29 @@ document.addEventListener('DOMContentLoaded', () => {
     // Llenar select con los años
     ui.fillYear();
 });
+
+eventListeners();
+function eventListeners() {
+    const form = document.querySelector('#cotizar-seguro');
+    form.addEventListener('submit', quoteInsurance);
+}
+
+// FUNCIONES
+function quoteInsurance(e) {
+    e.preventDefault();
+
+    // Leer marca seleccionada
+    const brand = document.querySelector('#marca').value;
+
+    // Leer año seleccionado
+    const year = document.querySelector('#year').value;
+
+    // Leer el tipo de seguro seleccionado
+    const type = document.querySelector('input[name="tipo"]:checked').value;
+
+    if (brand === '' || year === '' || type === '') {
+        console.log('No paso la validación');
+    } else {
+        console.log('Si paso la validación');
+    }
+}
