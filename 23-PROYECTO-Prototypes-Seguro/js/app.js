@@ -7,6 +7,52 @@ function Insurance(brand, year, type) {
     this.type = type;
 }
 
+// Cotiza el seguro en base a los datos recibidos
+Insurance.prototype.quoteInsurance = function() {
+    // Cotizar con base en la marca
+
+    /* Criterios de cotización
+    1 -> Americano incrementa en 1.15
+    2 -> Asiatico incrementa en 1.05
+    3 -> Europeo incrementa en 1.35
+    */
+   let quantity;
+   const base = 2000;
+
+    switch (this.brand) {
+        case '1':
+            quantity = base * 1.15;
+            break;
+        case '2':
+            quantity = base * 1.05;
+            break;
+        case '3':
+            quantity = base * 1.35;
+            break;
+        default:
+            break;
+    }
+
+    // Cotizar con base en el año
+    // El costo se reduce un 3% por cada año de diferencia (yearsDifference) con el año actual
+    const yearsDifference = new Date().getFullYear() - this.year;
+    quantity -= ((yearsDifference * 3) * quantity) / 100;
+    console.log(quantity);
+
+    // Cotizar con base en el tipo de seguro
+    /*
+    Seguro básico -> Costo se multiplica un 30%
+    Seguro completo -> Costo se multiplica un 50%
+    */
+    if (this.type === 'basic') {
+        quantity *= 1.30;
+    } else {
+        quantity *= 1.50;
+    }
+
+    return quantity;
+};
+
 // Interfaz
 function UI() {}
 
@@ -63,11 +109,11 @@ document.addEventListener('DOMContentLoaded', () => {
 eventListeners();
 function eventListeners() {
     const form = document.querySelector('#cotizar-seguro');
-    form.addEventListener('submit', quoteInsurance);
+    form.addEventListener('submit', getData);
 }
 
 // FUNCIONES
-function quoteInsurance(e) {
+function getData(e) {
     e.preventDefault();
 
     // Leer marca seleccionada
@@ -85,4 +131,8 @@ function quoteInsurance(e) {
     }
 
     ui.showMsg('Cotizando Seguro...', 'success');
+
+    // Instanciaar el seguro
+    const insurance = new Insurance(brand, year, type);
+    insurance.quoteInsurance();
 }
