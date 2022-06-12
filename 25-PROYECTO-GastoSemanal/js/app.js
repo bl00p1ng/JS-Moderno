@@ -66,6 +66,39 @@ class UI {
             pMsg.remove();
         }, 3000);
     }
+
+    // Mostrar el listado de gastos
+    showExpenses(expenses) {
+        // Limpiar HTML previo
+        this.clearHTML();
+
+        expenses.forEach(expense => {
+
+            const {expenseName, value, id} = expense;
+
+            // Crear HTML del gasto
+            const newExpense = document.createElement('li');
+            newExpense.className = 'list-group-item d-flex justify-content-between align-items-center';
+            newExpense.dataset.id = id;
+            newExpense.innerHTML = `${expenseName} <span class="badge badge-primary badge-pill">${value}</span`;
+
+            // Crear botón para borrar el gasto
+            const deleteBtn = document.createElement('button');
+            deleteBtn.classList.add('btn', 'btn-danger', 'borrar-gastp');
+            deleteBtn.textContent = 'Borrar ⨯';
+            newExpense.appendChild(deleteBtn);
+
+            // Agregar al DOM el HTML del gasto
+            listExpenses.appendChild(newExpense);
+        });
+    }
+
+    // Eliminar HTML previo
+    clearHTML() {
+        while (listExpenses.firstChild) {
+            listExpenses.removeChild(listExpenses.firstChild);
+        }
+    }
 }
 
 // Instanciar UI
@@ -111,6 +144,10 @@ function addExpense(e) {
 
     // Agrega un nuevo gasto al presupuesto
     budget.newExpense(expense);
+
+    // Mostrar los gastos
+    const {expenses} = budget;
+    ui.showExpenses(expenses);
 
     // Mensaje de gasto agregado
     ui.showAlert('Gasto agregado correctamente');
