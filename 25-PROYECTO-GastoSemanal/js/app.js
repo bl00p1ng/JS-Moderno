@@ -24,7 +24,15 @@ class Budget {
 }
 
 class UI {
+    // Muestra el presupuesto
+    showBudget(quantity) {
+        // Extraer datos
+        const {budget, remaining} = quantity;
 
+        // Agregar al HTML
+        document.querySelector('#total').textContent = budget;
+        document.querySelector('#restante').textContent = remaining;
+    }
 }
 
 // Instanciar UI
@@ -44,5 +52,7 @@ function askBudget() {
 
     // Instanciar presupuesto
     budget = new Budget(userBudget);
-    console.log(budget);
+
+    // Mostrar el presupuesto
+    ui.showBudget(budget);
 }
