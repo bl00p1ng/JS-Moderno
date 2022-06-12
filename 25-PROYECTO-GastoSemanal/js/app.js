@@ -21,6 +21,12 @@ class Budget {
         this.remaining = Number(userBudget);
         this.expenses = [];
     }
+
+    // Añadir un nuevo gasto
+    newExpense(expense) {
+        this.expenses = [...this.expenses, expense];
+        console.log(this.expenses);
+    }
 }
 
 /* Crea la variable de presupuesto en un contexto global.
@@ -89,7 +95,7 @@ function addExpense(e) {
 
     // Leer datos del form
     const expenseName = document.querySelector('#gasto').value;
-    const value = document.querySelector('#cantidad').value;
+    const value = Number(document.querySelector('#cantidad').value);
 
     // Validar campos
     if (expenseName === '' || value === '') {
@@ -98,7 +104,16 @@ function addExpense(e) {
     } else if (value <= 0 || isNaN(value)) {
         ui.showAlert('Cantidad no valida', 'error');
         return;
-    } else {
-        ui.showAlert('Correcto', 'succcess');
     }
+
+    // Crear un objeto con el gasto
+    const expense = {expenseName, value, id: Date.now()};
+
+    // Agrega un nuevo gasto al presupuesto
+    budget.newExpense(expense);
+
+    // Mensaje de gasto agregado
+    ui.showAlert('Gasto agregado correctamente');
+    // Reiniciar form
+    form.reset();
 }
