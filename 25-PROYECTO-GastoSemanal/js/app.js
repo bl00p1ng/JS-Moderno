@@ -25,7 +25,14 @@ class Budget {
     // Añadir un nuevo gasto
     newExpense(expense) {
         this.expenses = [...this.expenses, expense];
-        console.log(this.expenses);
+        this.calculateRemaining();
+    }
+
+    // Calcular el presupuesto restante
+    calculateRemaining() {
+        const spent = this.expenses.reduce((total, expense) => total += expense.value, 0);
+
+        this.remaining = this.remaining - spent;
     }
 }
 
@@ -80,7 +87,7 @@ class UI {
             const newExpense = document.createElement('li');
             newExpense.className = 'list-group-item d-flex justify-content-between align-items-center';
             newExpense.dataset.id = id;
-            newExpense.innerHTML = `${expenseName} <span class="badge badge-primary badge-pill">${value}</span`;
+            newExpense.innerHTML = `${expenseName} <span class="badge badge-primary badge-pill">$ ${value}</span`;
 
             // Crear botón para borrar el gasto
             const deleteBtn = document.createElement('button');
@@ -98,6 +105,11 @@ class UI {
         while (listExpenses.firstChild) {
             listExpenses.removeChild(listExpenses.firstChild);
         }
+    }
+
+    // Actualizar el presupuesto restante
+    updateRemaining(remaining) {
+        document.querySelector('#restante').textContent = remaining;
     }
 }
 
@@ -146,8 +158,11 @@ function addExpense(e) {
     budget.newExpense(expense);
 
     // Mostrar los gastos
-    const {expenses} = budget;
+    const {expenses, remaining} = budget;
     ui.showExpenses(expenses);
+
+    // Actualizar el presupuesto restante en la UI
+    ui.updateRemaining(remaining);
 
     // Mensaje de gasto agregado
     ui.showAlert('Gasto agregado correctamente');
