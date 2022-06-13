@@ -1,6 +1,7 @@
 // VARIABLES Y SELECTORES
 const form = document.querySelector('#agregar-gasto');
 const listExpenses = document.querySelector('#gastos ul');
+const resetBtn = document.querySelector('#reset-btn');
 
 
 // EVENT LISTENERS
@@ -11,6 +12,14 @@ function eventListeners() {
 
     // Obtener los datos del formulario de gastos
     form.addEventListener('submit', addExpense);
+
+    // Reiniciar presupuesto
+    resetBtn.addEventListener('click', () => {
+        budget.reset();
+        ui.clearHTML();
+        ui.showBudget(budget);
+        askBudget();
+    });
 }
 
 
@@ -25,25 +34,56 @@ class Budget {
     // Añadir un nuevo gasto
     newExpense(expense) {
         this.expenses = [...this.expenses, expense];
+
+        // Guardar gastos en localStorage
+        localStorage.setItem('expenses', JSON.stringify(this.expenses));
+
         this.calculateRemaining();
     }
 
     // Calcular el presupuesto restante
     calculateRemaining() {
         const spent = this.expenses.reduce((total, expense) => total += expense.value, 0);
-        console.log('gastado: ', spent);
 
         this.remaining = this.budget - spent;
-        console.log('restante: ', this.remaining);
+
+        // Guardar presupuesto restante en localStorage
+        localStorage.setItem('remaining', this.remaining);
     }
 
     // Eliminar un gasto
     deleteExpense(id) {
         // Eliminar el gasto con el id ingresado
         this.expenses = this.expenses.filter(expense => expense.id !== id);
+        console.log(this.expenses);
+        // Cargar gastos actualizados en localStorage
+        localStorage.setItem('expenses', JSON.stringify(this.expenses));
 
         // Recalcular presupuesto restante
         this.calculateRemaining();
+    }
+
+    // Cargar las atributos de Budget con los datos del localStorage
+    loadData() {
+        // Verificar si existe remaining en localStorage
+        if (localStorage.getItem('remaining')) {
+            const remaining = Number(localStorage.getItem('remaining'));
+            this.remaining = remaining;
+        }
+
+        // Veficar si hay gastos guardados, para evitar errores
+        if (localStorage.getItem('expenses') || localStorage.getItem('expenses') !== '') {
+            const expenses = JSON.parse(localStorage.getItem('expenses'));
+            this.expenses = expenses;
+        }
+    }
+
+    // Borrar el presupuesto y los gastos guardados
+    reset() {
+        this.budget = 0;
+        this.expenses = [];
+        this.remaining = 0;
+        localStorage.clear();
     }
 }
 
@@ -157,17 +197,41 @@ const ui = new UI();
 
 // FUNCIONES
 function askBudget() {
-    const userBudget = prompt('¿Cuál es tu presupuesto?');
+    // Verificar si hay un presupuesto guardado en el localStorage
+    if (localStorage.getItem('budget')) {
+        // Presupuesto guardado en el localStorage
+        const lsBudget = localStorage.getItem('budget');
 
-    /* Si el usuario no ingresa nada, cancela, no ingresa un número,
-    o ingresa un número negativo, se recarga la pagina para abrir 
-    el prompt otra vez */
-    if (userBudget === '' || userBudget === null || isNaN(userBudget) || userBudget <= 0) {
-        window.location.reload();
+        // Instanciar presupuesto
+        budget = new Budget(lsBudget);
+
+        // Cargar los datos de localStorage y asignarlos a los atributos de Budget
+        budget.loadData();
+
+        // Verificar si hay gastos y mostrarlos
+        const {expenses} = budget;
+        if (expenses) {
+            ui.showExpenses(expenses);
+        }
+
+        // Comprobar el presupuesto gastado y cambiar el color de la alerta
+        ui.checkBudget(budget);
+    } else {
+        const userBudget = prompt('¿Cuál es tu presupuesto?');
+
+        /* Si el usuario no ingresa nada, cancela, no ingresa un número,
+        o ingresa un número negativo, se recarga la pagina para abrir 
+        el prompt otra vez */
+        if (userBudget === '' || userBudget === null || isNaN(userBudget) || userBudget <= 0) {
+            window.location.reload();
+        }
+
+        // Instanciar presupuesto
+        budget = new Budget(userBudget);
+
+        // Guardar presupuesto en local Storage
+        localStorage.setItem('budget', userBudget);
     }
-
-    // Instanciar presupuesto
-    budget = new Budget(userBudget);
 
     // Mostrar el presupuesto
     ui.showBudget(budget);
