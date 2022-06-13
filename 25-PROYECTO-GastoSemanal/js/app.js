@@ -31,8 +31,10 @@ class Budget {
     // Calcular el presupuesto restante
     calculateRemaining() {
         const spent = this.expenses.reduce((total, expense) => total += expense.value, 0);
+        console.log('gastado: ', spent);
 
-        this.remaining = this.remaining - spent;
+        this.remaining = this.budget - spent;
+        console.log('restante: ', this.remaining);
     }
 }
 
@@ -111,6 +113,26 @@ class UI {
     updateRemaining(remaining) {
         document.querySelector('#restante').textContent = remaining;
     }
+
+    // Comprobar el presupuesto gastado para cambiar el color del presupuesto restante
+    checkBudget(budgetObj) {
+        const {budget, remaining} = budgetObj;
+        const remainingDiv = document.querySelector('.restante');
+
+        if ((budget / 4) > remaining) {  // Comprobar 25%
+            remainingDiv.classList.remove('alert-success', 'alert-warning');
+            remainingDiv.classList.add('alert-danger');
+        } else if ((budget / 2) > remaining) {  // Comprobar 50%
+            remainingDiv.classList.remove('alert-success');
+            remainingDiv.classList.add('alert-warning');
+        }
+
+        // Validar si se agotó el presupuesto
+        if (remaining <= 0) {
+            ui.showAlert('El presupuesto se ha agotado', 'error');
+            form.querySelector('button[type="submit"]').disabled = true;
+        }
+    }
 }
 
 // Instanciar UI
@@ -163,6 +185,9 @@ function addExpense(e) {
 
     // Actualizar el presupuesto restante en la UI
     ui.updateRemaining(remaining);
+
+    // Comprobar el presupuesto gastado y cambiar el color de la alerta
+    ui.checkBudget(budget);
 
     // Mensaje de gasto agregado
     ui.showAlert('Gasto agregado correctamente');
