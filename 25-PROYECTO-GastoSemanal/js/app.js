@@ -36,6 +36,15 @@ class Budget {
         this.remaining = this.budget - spent;
         console.log('restante: ', this.remaining);
     }
+
+    // Eliminar un gasto
+    deleteExpense(id) {
+        // Eliminar el gasto con el id ingresado
+        this.expenses = this.expenses.filter(expense => expense.id !== id);
+
+        // Recalcular presupuesto restante
+        this.calculateRemaining();
+    }
 }
 
 /* Crea la variable de presupuesto en un contexto global.
@@ -95,6 +104,10 @@ class UI {
             const deleteBtn = document.createElement('button');
             deleteBtn.classList.add('btn', 'btn-danger', 'borrar-gastp');
             deleteBtn.textContent = 'Borrar ⨯';
+
+            // Ejecuta la acción de borrar un gasto
+            deleteBtn.onclick = () => deleteExpense(id);
+
             newExpense.appendChild(deleteBtn);
 
             // Agregar al DOM el HTML del gasto
@@ -125,6 +138,9 @@ class UI {
         } else if ((budget / 2) > remaining) {  // Comprobar 50%
             remainingDiv.classList.remove('alert-success');
             remainingDiv.classList.add('alert-warning');
+        } else {  // Cuando se efectua un reembolso
+            remainingDiv.classList.remove('alert-danger', 'alert-warning');
+            remainingDiv.classList.add('alert-success');
         }
 
         // Validar si se agotó el presupuesto
@@ -193,4 +209,20 @@ function addExpense(e) {
     ui.showAlert('Gasto agregado correctamente');
     // Reiniciar form
     form.reset();
+}
+
+// Eliminar un gasto
+function deleteExpense(id) {
+    // Elimina el gasto del objeto
+    budget.deleteExpense(id);
+
+    // Elimina el gasto del HTML
+    const {expenses, remaining} = budget;
+    ui.showExpenses(expenses);
+
+    // Actualizar el presupuesto restante en la UI
+    ui.updateRemaining(remaining);
+
+    // Comprobar el presupuesto gastado y cambiar el color de la alerta
+    ui.checkBudget(budget);
 }
