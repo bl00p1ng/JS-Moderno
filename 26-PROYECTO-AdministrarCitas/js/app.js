@@ -10,6 +10,8 @@ const symptomsInput = document.querySelector('#sintomas');
 
 const appointmentContainer = document.querySelector('#citas');
 
+let isEditing;  // Habilita el modo edición
+
 // EVENT LISTENERS
 eventListeners();
 function eventListeners() {
@@ -126,9 +128,15 @@ class UI {
             deleteBtn.innerHTML = `Eliminar <svg class="w-6 h-6" data-darkreader-inline-stroke="" fill="none" stroke="currentColor" style="--darkreader-inline-stroke: currentColor;" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`;
             appointmentView.appendChild(deleteBtn);
 
-            deleteBtn.onclick = () => {
-                deleteAppointment(id);
-            }
+            deleteBtn.onclick = () => deleteAppointment(id);
+
+            // Botón para editar cita
+            const editBtn = document.createElement('button');
+            editBtn.classList.add('btn', 'btn-info');
+            editBtn.innerHTML = `Editar cita <svg class="w-6 h-6" data-darkreader-inline-stroke="" fill="none" stroke="currentColor" style="--darkreader-inline-stroke: currentColor;" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>`;
+            appointmentView.appendChild(editBtn);
+
+            editBtn.onclick = () => editAppointment(appointment);
 
             // Agregar citas al HTML
             appointmentContainer.appendChild(appointmentView);
@@ -167,12 +175,27 @@ function newAppointment(e) {
         return;
     }
 
-    // Generar un ID único para cada cita
-    appointmentObj.id = Date.now();
+    if (isEditing) {
+        // Mensaje de editado correctamente
+        ui.showAlert('Cita editada correctamente');
 
-    // Crear una nueva cita
-    // Toma una copia de appointmentObj para evitar que se sobreescriba el objeto
-    manageAppointment.addAppointment({...appointmentObj});
+        // Regresar el botón de actualizar a su estado original
+        form.querySelector('button[type="submit"').textContent = 'Crear cita';
+
+        // Deshabilitar modo edición
+        isEditing = false;
+    } else {
+        // Generar un ID único para cada cita
+        appointmentObj.id = Date.now();
+    
+        // Crear una nueva cita
+        // Toma una copia de appointmentObj para evitar que se sobreescriba el objeto
+        manageAppointment.addAppointment({...appointmentObj});
+
+        // Mensaje de agregado correctamente
+        ui.showAlert('Cita agregada correctamente');
+    }
+
 
     // Reiniciar objeto
     resetAppointmentObj();
@@ -204,4 +227,32 @@ function deleteAppointment(id) {
 
     // Actualizar la vista
     ui.showAppointment(manageAppointment);
+}
+
+// Editar una cita por su id
+function editAppointment(appointment) {
+    const {pet, owner, phone, date, hour, symptoms, id} = appointment;
+
+    // Llenar los inputs con los datos ingresados
+    petInput.value = pet;
+    ownerInput.value = owner;
+    phoneInput.value = phone;
+    dateInput.value = date;
+    hourInput.value = hour;
+    symptomsInput.value = symptoms;
+
+    // Añadir datos al objeto de las citas
+    appointmentObj.pet = pet;
+    appointmentObj.owner = owner;
+    appointmentObj.phone = phone;
+    appointmentObj.date = date;
+    appointmentObj.hour = hour;
+    appointmentObj.symptoms = symptoms;
+    appointmentObj.id = id;
+
+    // Cambiar el texto del botón por "Actualizar Cita"
+    form.querySelector('button[type="submit"').textContent = 'Actualizar Cita';
+
+    // Habilitar modo edición
+    isEditing = true;
 }
