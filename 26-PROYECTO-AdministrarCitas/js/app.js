@@ -77,10 +77,61 @@ class UI {
             alertDiv.remove();
         }, 3000);
     }
+
+    // Mostrar cita en el HTML
+    showAppointment({appointments}) {
+        // Limpiar HTML
+        this.clearHTML();
+
+        appointments.forEach(appointment => {
+            const {pet, owner, phone, date, hour, symptoms, id} = appointment;
+            console.log(appointment);
+
+            const appointmentView = document.createElement('div');
+            appointmentView.classList.add('cita', 'p-3');
+            appointmentView.dataset.id = id;
+
+            // DOM Scripting de cada elemento
+            const pPet = document.createElement('h2');
+            pPet.textContent = pet;
+            pPet.classList.add('card-title', 'font-weight-bolder');
+            appointmentView.appendChild(pPet);
+
+            const pOwner = document.createElement('p');
+            pOwner.innerHTML = `<span class="font-weight-bolder">Propietario: </span>${owner}`;
+            appointmentView.appendChild(pOwner);
+
+            const pPhone = document.createElement('p');
+            pPhone.innerHTML = `<span class="font-weight-bolder">Teléfono: </span>${phone}`;
+            appointmentView.appendChild(pPhone);
+
+            const pDate = document.createElement('p');
+            pDate.innerHTML = `<span class="font-weight-bolder">Fecha: </span>${date}`;
+            appointmentView.appendChild(pDate);
+
+            const pHour = document.createElement('p');
+            pHour.innerHTML = `<span class="font-weight-bolder">Hora: </span>${hour}`;
+            appointmentView.appendChild(pHour);
+
+            const pSymptoms = document.createElement('p');
+            pSymptoms.innerHTML = `<span class="font-weight-bolder">Síntomas: </span>${symptoms}`;
+            appointmentView.appendChild(pSymptoms);
+
+            // Agregar citas al HTML
+            appointmentContainer.appendChild(appointmentView);
+        });
+    }
+
+    // Limpiar el HTML existente
+    clearHTML() {
+        while (appointmentContainer.firstChild) {
+            appointmentContainer.removeChild(appointmentContainer.firstChild);
+        }
+    }
 }
 
 // Instanciar clases
-const appointment = new Appointments();
+const manageAppointment = new Appointments();
 const ui = new UI();
 
 // FUNCIONES
@@ -108,13 +159,16 @@ function newAppointment(e) {
 
     // Crear una nueva cita
     // Toma una copia de appointmentObj para evitar que se sobreescriba el objeto
-    appointment.addAppointment({...appointmentObj});
+    manageAppointment.addAppointment({...appointmentObj});
 
     // Reiniciar objeto
     resetAppointmentObj();
 
     // Reiniciar form
     form.reset();
+
+    // Mostrar cita creada
+    ui.showAppointment(manageAppointment);
 }
 
 // Resetear el objeto global con los datos de la cita (appointmentObj)
