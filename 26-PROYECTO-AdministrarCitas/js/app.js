@@ -52,6 +52,12 @@ class Appointments {
     deleteAppointment(id) {
         this.appointments = this.appointments.filter(appointment => appointment.id !== id);
     }
+
+    // Editar una cita
+    editAppointment(appointmentToUpdate) {
+        // Busca el id de la cita a actualizar y la sobreescribe con los datos nuevos
+        this.appointments = this.appointments.map(appointment => appointment.id === appointmentToUpdate.id ? appointmentToUpdate : appointment);
+    }
 }
 
 class UI {
@@ -176,6 +182,9 @@ function newAppointment(e) {
     }
 
     if (isEditing) {
+        // Pasar el objeto de la cita (appointmentObj) a edición
+        manageAppointment.editAppointment({...appointmentObj});
+
         // Mensaje de editado correctamente
         ui.showAlert('Cita editada correctamente');
 
