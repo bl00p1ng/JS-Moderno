@@ -40,6 +40,12 @@ class Appointments {
     constructor() {
         this.appointments = [];
     }
+
+    // Añadir una nueva cita al array appointments
+    addAppointment(appointment) {
+        this.appointments = [...this.appointments, appointment];
+        console.log(this.appointments);
+    }
 }
 
 class UI {
@@ -82,7 +88,6 @@ const ui = new UI();
 function appointmentData(e) {
     // Usa name como key para asignarle valores a appointmentObj
     appointmentObj[e.target.name] = e.target.value;
-    console.log(appointmentObj);
 }
 
 // Valida y crea una nueva cita
@@ -97,4 +102,27 @@ function newAppointment(e) {
         ui.showAlert('Todos los campos son obligatorios', 'error');
         return;
     }
+
+    // Generar un ID único para cada cita
+    appointmentObj.id = Date.now();
+
+    // Crear una nueva cita
+    // Toma una copia de appointmentObj para evitar que se sobreescriba el objeto
+    appointment.addAppointment({...appointmentObj});
+
+    // Reiniciar objeto
+    resetAppointmentObj();
+
+    // Reiniciar form
+    form.reset();
+}
+
+// Resetear el objeto global con los datos de la cita (appointmentObj)
+function resetAppointmentObj() {
+    appointmentObj.pet = '';
+    appointmentObj.owner = '';
+    appointmentObj.phone = '';
+    appointmentObj.date = '';
+    appointmentObj.hour = '';
+    appointmentObj.symptoms = '';
 }
