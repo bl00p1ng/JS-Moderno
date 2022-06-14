@@ -44,7 +44,11 @@ class Appointments {
     // Añadir una nueva cita al array appointments
     addAppointment(appointment) {
         this.appointments = [...this.appointments, appointment];
-        console.log(this.appointments);
+    }
+
+    // Eliminar cita en base a su id
+    deleteAppointment(id) {
+        this.appointments = this.appointments.filter(appointment => appointment.id !== id);
     }
 }
 
@@ -85,7 +89,6 @@ class UI {
 
         appointments.forEach(appointment => {
             const {pet, owner, phone, date, hour, symptoms, id} = appointment;
-            console.log(appointment);
 
             const appointmentView = document.createElement('div');
             appointmentView.classList.add('cita', 'p-3');
@@ -116,6 +119,16 @@ class UI {
             const pSymptoms = document.createElement('p');
             pSymptoms.innerHTML = `<span class="font-weight-bolder">Síntomas: </span>${symptoms}`;
             appointmentView.appendChild(pSymptoms);
+
+            // Boton para borrar cita
+            const deleteBtn = document.createElement('button');
+            deleteBtn.classList.add('btn', 'btn-danger', 'mr-2');
+            deleteBtn.innerHTML = `Eliminar <svg class="w-6 h-6" data-darkreader-inline-stroke="" fill="none" stroke="currentColor" style="--darkreader-inline-stroke: currentColor;" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`;
+            appointmentView.appendChild(deleteBtn);
+
+            deleteBtn.onclick = () => {
+                deleteAppointment(id);
+            }
 
             // Agregar citas al HTML
             appointmentContainer.appendChild(appointmentView);
@@ -179,4 +192,16 @@ function resetAppointmentObj() {
     appointmentObj.date = '';
     appointmentObj.hour = '';
     appointmentObj.symptoms = '';
+}
+
+// Eliminar una cita por su id
+function deleteAppointment(id) {
+    // Eliminar la cita en la clase Appointments
+    manageAppointment.deleteAppointment(id);
+
+    // Mostrar un mensaje
+    ui.showAlert('Cita eliminada correctamente');
+
+    // Actualizar la vista
+    ui.showAppointment(manageAppointment);
 }
