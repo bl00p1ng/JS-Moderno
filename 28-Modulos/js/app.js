@@ -1,4 +1,4 @@
-import {clientName, saving, showInfo, hasSaving, Client} from './cliente.js'
+import newFunction, {clientName, saving, showInfo, hasSaving, Client} from './cliente.js'
 // Importar empresa
 import { Enterprise } from './empresa.js';
 
@@ -16,3 +16,4 @@ console.log(client.showInfo());
 
 const enterprise = new Enterprise('Spotify', 1000000, 'Música y Podcast');
 console.log(enterprise.showInfo());
+newFunction();
