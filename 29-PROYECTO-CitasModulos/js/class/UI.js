@@ -1,3 +1,6 @@
+import { editAppointment, deleteAppointment } from "../functions.js";
+import { appointmentContainer } from "../selectors.js";
+
 export default class UI {
     // Mostrar un mensaje de alerta
     showAlert(msg, alertType) {

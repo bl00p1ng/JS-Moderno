@@ -1,3 +1,13 @@
+import Appointments from "./class/Appointments.js";
+import UI from "./class/UI.js";
+import {petInput, 
+        ownerInput, 
+        phoneInput, 
+        dateInput, 
+        hourInput, 
+        symptomsInput, 
+        form} from './selectors.js'
+
 // FUNCIONES
 
 // Instanciar clases
