@@ -12,3 +12,14 @@ export function hasSaving(saving) {
         console.log('No tiene saldo');
     }
 }
+
+export class Client {
+    constructor(name, saving) {
+        this.name = name;
+        this.saving = saving;
+    }
+
+    showInfo() {
+        return `Cliente: ${this.name} - Ahorro: ${this.saving}`;
+    }
+}
