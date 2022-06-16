@@ -16,8 +16,10 @@ let isEditing;  // Habilita el modo edición
 
 // Crea la DB cuando se termina de cargar el documento
 window.onload = () => {
+    // Agregar event Listeners
     eventListeners();
 
+    // Crear DB
     createDB();
 }
 
@@ -99,62 +101,76 @@ class UI {
     }
 
     // Mostrar cita en el HTML
-    showAppointment({appointments}) {
+    showAppointment() {
         // Limpiar HTML
         this.clearHTML();
 
-        appointments.forEach(appointment => {
-            const {pet, owner, phone, date, hour, symptoms, id} = appointment;
+        // Leer contenido de la DB
+        console.log(DB);
+        const objectStore = DB.transaction('appointments').objectStore('appointments');
 
-            const appointmentView = document.createElement('div');
-            appointmentView.classList.add('cita', 'p-3');
-            appointmentView.dataset.id = id;
+        // Recorrer registros de la DB
+        objectStore.openCursor().onsuccess = e => {
+            const cursor = e.target.result;
+            console.log(cursor);
 
-            // DOM Scripting de cada elemento
-            const pPet = document.createElement('h2');
-            pPet.textContent = pet;
-            pPet.classList.add('card-title', 'font-weight-bolder');
-            appointmentView.appendChild(pPet);
+            // Validar si hay datos en la DB
+            if (cursor) {
+                const {pet, owner, phone, date, hour, symptoms, id} = cursor.value;
+    
+                const appointmentView = document.createElement('div');
+                appointmentView.classList.add('cita', 'p-3');
+                appointmentView.dataset.id = id;
+    
+                // DOM Scripting de cada elemento
+                const pPet = document.createElement('h2');
+                pPet.textContent = pet;
+                pPet.classList.add('card-title', 'font-weight-bolder');
+                appointmentView.appendChild(pPet);
+    
+                const pOwner = document.createElement('p');
+                pOwner.innerHTML = `<span class="font-weight-bolder">Propietario: </span>${owner}`;
+                appointmentView.appendChild(pOwner);
+    
+                const pPhone = document.createElement('p');
+                pPhone.innerHTML = `<span class="font-weight-bolder">Teléfono: </span>${phone}`;
+                appointmentView.appendChild(pPhone);
+    
+                const pDate = document.createElement('p');
+                pDate.innerHTML = `<span class="font-weight-bolder">Fecha: </span>${date}`;
+                appointmentView.appendChild(pDate);
+    
+                const pHour = document.createElement('p');
+                pHour.innerHTML = `<span class="font-weight-bolder">Hora: </span>${hour}`;
+                appointmentView.appendChild(pHour);
+    
+                const pSymptoms = document.createElement('p');
+                pSymptoms.innerHTML = `<span class="font-weight-bolder">Síntomas: </span>${symptoms}`;
+                appointmentView.appendChild(pSymptoms);
+    
+                // Boton para borrar cita
+                const deleteBtn = document.createElement('button');
+                deleteBtn.classList.add('btn', 'btn-danger', 'mr-2');
+                deleteBtn.innerHTML = `Eliminar <svg class="w-6 h-6" data-darkreader-inline-stroke="" fill="none" stroke="currentColor" style="--darkreader-inline-stroke: currentColor;" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`;
+                appointmentView.appendChild(deleteBtn);
+    
+                deleteBtn.onclick = () => deleteAppointment(id);
+    
+                // Botón para editar cita
+                const editBtn = document.createElement('button');
+                editBtn.classList.add('btn', 'btn-info');
+                editBtn.innerHTML = `Editar cita <svg class="w-6 h-6" data-darkreader-inline-stroke="" fill="none" stroke="currentColor" style="--darkreader-inline-stroke: currentColor;" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>`;
+                appointmentView.appendChild(editBtn);
+    
+                editBtn.onclick = () => editAppointment(appointment);
+    
+                // Agregar citas al HTML
+                appointmentContainer.appendChild(appointmentView);
 
-            const pOwner = document.createElement('p');
-            pOwner.innerHTML = `<span class="font-weight-bolder">Propietario: </span>${owner}`;
-            appointmentView.appendChild(pOwner);
-
-            const pPhone = document.createElement('p');
-            pPhone.innerHTML = `<span class="font-weight-bolder">Teléfono: </span>${phone}`;
-            appointmentView.appendChild(pPhone);
-
-            const pDate = document.createElement('p');
-            pDate.innerHTML = `<span class="font-weight-bolder">Fecha: </span>${date}`;
-            appointmentView.appendChild(pDate);
-
-            const pHour = document.createElement('p');
-            pHour.innerHTML = `<span class="font-weight-bolder">Hora: </span>${hour}`;
-            appointmentView.appendChild(pHour);
-
-            const pSymptoms = document.createElement('p');
-            pSymptoms.innerHTML = `<span class="font-weight-bolder">Síntomas: </span>${symptoms}`;
-            appointmentView.appendChild(pSymptoms);
-
-            // Boton para borrar cita
-            const deleteBtn = document.createElement('button');
-            deleteBtn.classList.add('btn', 'btn-danger', 'mr-2');
-            deleteBtn.innerHTML = `Eliminar <svg class="w-6 h-6" data-darkreader-inline-stroke="" fill="none" stroke="currentColor" style="--darkreader-inline-stroke: currentColor;" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`;
-            appointmentView.appendChild(deleteBtn);
-
-            deleteBtn.onclick = () => deleteAppointment(id);
-
-            // Botón para editar cita
-            const editBtn = document.createElement('button');
-            editBtn.classList.add('btn', 'btn-info');
-            editBtn.innerHTML = `Editar cita <svg class="w-6 h-6" data-darkreader-inline-stroke="" fill="none" stroke="currentColor" style="--darkreader-inline-stroke: currentColor;" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>`;
-            appointmentView.appendChild(editBtn);
-
-            editBtn.onclick = () => editAppointment(appointment);
-
-            // Agregar citas al HTML
-            appointmentContainer.appendChild(appointmentView);
-        });
+                // Ir al siguiente elemento guardado en la DB
+                cursor.continue();
+            }
+        }
     }
 
     // Limpiar el HTML existente
@@ -236,7 +252,7 @@ function newAppointment(e) {
     form.reset();
 
     // Mostrar cita creada
-    ui.showAppointment(manageAppointment);
+    ui.showAppointment();
 }
 
 // Resetear el objeto global con los datos de la cita (appointmentObj)
@@ -258,7 +274,7 @@ function deleteAppointment(id) {
     ui.showAlert('Cita eliminada correctamente');
 
     // Actualizar la vista
-    ui.showAppointment(manageAppointment);
+    ui.showAppointment();
 }
 
 // Editar una cita por su id
@@ -299,9 +315,11 @@ function createDB() {
 
     // Si la DB se crea correctamente
     createDB.onsuccess = () => {
-        console.log('DB creada correctamente');
-
         DB = createDB.result;
+
+        // Mostrar las citas guardadas
+        ui.showAppointment();
+        console.log('DB creada correctamente');
     }
 
     // Definir el schema de la DB
