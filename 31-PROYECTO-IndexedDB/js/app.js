@@ -112,7 +112,6 @@ class UI {
         // Recorrer registros de la DB
         objectStore.openCursor().onsuccess = e => {
             const cursor = e.target.result;
-            console.log(cursor);
 
             // Validar si hay datos en la DB
             if (cursor) {
@@ -161,8 +160,8 @@ class UI {
                 editBtn.classList.add('btn', 'btn-info');
                 editBtn.innerHTML = `Editar cita <svg class="w-6 h-6" data-darkreader-inline-stroke="" fill="none" stroke="currentColor" style="--darkreader-inline-stroke: currentColor;" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>`;
                 appointmentView.appendChild(editBtn);
-    
-                editBtn.onclick = () => editAppointment(appointment);
+                const appointmentToEdit = cursor.value;
+                editBtn.onclick = () => editAppointment(appointmentToEdit);
     
                 // Agregar citas al HTML
                 appointmentContainer.appendChild(appointmentView);
@@ -209,14 +208,28 @@ function newAppointment(e) {
         // Pasar el objeto de la cita (appointmentObj) a edición
         manageAppointment.editAppointment({...appointmentObj});
 
-        // Mensaje de editado correctamente
-        ui.showAlert('Cita editada correctamente');
+        // Editar cita en la DB
+        const transaction = DB.transaction(['appointments'], 'readwrite');
+        const objectStore = transaction.objectStore('appointments');
 
-        // Regresar el botón de actualizar a su estado original
-        form.querySelector('button[type="submit"').textContent = 'Crear cita';
+        // Actualizar cita en la DB
+        objectStore.put(appointmentObj);
 
-        // Deshabilitar modo edición
-        isEditing = false;
+        // Si se edita correctamente
+        transaction.oncomplete = () => {
+            // Mensaje de editado correctamente
+            ui.showAlert('Cita editada correctamente');
+    
+            // Regresar el botón de actualizar a su estado original
+            form.querySelector('button[type="submit"').textContent = 'Crear cita';
+    
+            // Deshabilitar modo edición
+            isEditing = false;
+        }
+
+        // Si ocurre un error al editar
+        transaction.onerror = () => console.error('Hubo un error al editar la cita en la DB');
+
     } else {
         // Generar un ID único para cada cita
         appointmentObj.id = Date.now();
@@ -311,7 +324,7 @@ function createDB() {
     const createDB = window.indexedDB.open('appointments', 1);
 
     //Si hay un error
-    createDB.onerror = () => console.log('Error al crear la DB');
+    createDB.onerror = () => console.error('Error al crear la DB');
 
     // Si la DB se crea correctamente
     createDB.onsuccess = () => {
