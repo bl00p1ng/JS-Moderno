@@ -280,14 +280,27 @@ function resetAppointmentObj() {
 
 // Eliminar una cita por su id
 function deleteAppointment(id) {
-    // Eliminar la cita en la clase Appointments
-    manageAppointment.deleteAppointment(id);
+    // Eliminar la cita en la DB
+    const transaction = DB.transaction(['appointments'], 'readwrite');
+    const objectStore = transaction.objectStore('appointments');
 
-    // Mostrar un mensaje
-    ui.showAlert('Cita eliminada correctamente');
+    // Borrar la cita con el ID indicado
+    objectStore.delete(id);
 
-    // Actualizar la vista
-    ui.showAppointment();
+    // Si se borro correctamente
+    transaction.oncomplete = () => {
+        // Mostrar un mensaje
+        ui.showAlert('Cita eliminada correctamente');
+
+        // Actualizar la vista
+        ui.showAppointment();
+    }
+
+    // Si ocurre un error
+    transaction.onerror = () => {
+        // Mostrar mensaje de error
+        ui.showAlert('Hubo un error al eliminar la cita', 'error');
+    }
 }
 
 // Editar una cita por su id
