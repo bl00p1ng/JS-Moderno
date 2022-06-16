@@ -209,8 +209,23 @@ function newAppointment(e) {
         // Toma una copia de appointmentObj para evitar que se sobreescriba el objeto
         manageAppointment.addAppointment({...appointmentObj});
 
-        // Mensaje de agregado correctamente
-        ui.showAlert('Cita agregada correctamente');
+        // Insertar registro en la DB
+        const transaction = DB.transaction(['appointments'], 'readwrite')
+
+        // Habilitar objectStore
+        const objectStore = transaction.objectStore('appointments');
+
+        // Agregar cita a la DB
+        objectStore.add(appointmentObj);
+
+        // Si la transacción se completa correctamente
+        transaction.oncomplete = () => {
+            console.log('Cita agregada a la DB');
+
+            // Mensaje de agregado correctamente
+            ui.showAlert('Cita agregada correctamente');
+        }
+
     }
 
 
