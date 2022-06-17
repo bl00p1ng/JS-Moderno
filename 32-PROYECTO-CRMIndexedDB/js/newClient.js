@@ -45,8 +45,40 @@
             if (name === '' || email === '' || phone === '' || enterprise === '') {
                 showAlert('Todos los campos son obligatorios', 'error');
             }
-        }
 
+            // Objeto con los datos ingresados en el formulario
+            const client = {
+                name,
+                email,
+                phone,
+                enterprise,
+                id: Date.now()
+            };
+
+            // Crear un nuevo cliente
+            createClient(client);
+        }
+    }
+
+    // Crear un nuevo cliente
+    function createClient(clientToCreate) {
+        const transaction = DB.transaction(['crm'], 'readwrite');
+
+        const objectStore = transaction.objectStore('crm');
+
+        // Agregar cliente a la DB
+        objectStore.add(clientToCreate);
+
+        // Si el cliente se agrega correctamente
+        transaction.oncomplete = () => showAlert('Cliente creado exitosamente', 'success');
+
+        // Si algo falla al agregar el cliente a la DB
+        transaction.onerror = () => showAlert('Hubo un error al crear el cliente', 'error');
+
+        // Redirigir a la pagina de clientes despues de 3 segundos
+        setTimeout(() => {
+            window.location.href = 'index.html';
+        }, 3000);
     }
 
     // Mostrar un mensaje de alerta en el DOM
