@@ -63,7 +63,6 @@
                 const cursor = e.target.result;
 
                 if (cursor) {
-                    console.log(cursor.value);
                     // Extraer los datos de cada cliente de la DB
                     const {name, email, phone, enterprise, id} = cursor.value;
 
