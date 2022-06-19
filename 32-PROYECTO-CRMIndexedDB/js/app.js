@@ -14,6 +14,9 @@
             // Obtener los clientes de la DB
             getClients();
         }
+
+        // Borrar el cliente seleccionado
+        clientList.addEventListener('click', deleteClient);
     });
 
     // ********** FUNCIONES **********
@@ -81,19 +84,48 @@
                             </td>
                             <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200 text-sm leading-5">
                                 <a href="editar-cliente.html?id=${id}" class="text-teal-600 hover:text-teal-900 mr-5">Editar</a>
-                                <a href="#" data-cliente="${id}" class="text-red-600 hover:text-red-900">Eliminar</a>
+                                <a href="#" data-cliente="${id}" class="delete text-red-600 hover:text-red-900">Eliminar</a>
                             </td>
                         </tr>
                     `;
 
                     cursor.continue();
-                } else {
-                    console.log('No hay más registros');
                 }
             };
         };
 
         // Si hay un error al abrir la conexión
         openConnection.onerror = () => console.error('Ocurrio un error al abrir la conexión');
+    }
+
+    // Borrar un cliente
+    function deleteClient(e) {
+        e.preventDefault();
+
+        // Verificar si se da click al botón de eliminar
+        if (e.target.classList.contains('delete')) {
+            const idToDelete = Number(e.target.dataset.cliente);
+
+            // Confirmar la eliminación del cliente
+            const confirmDelete = confirm('¿Deseas eliminar este cliente?');
+
+            // Eliminar el cliente
+            if (confirmDelete) {
+                const transaction = DB.transaction(['crm'], 'readwrite');
+                const objectStore = transaction.objectStore('crm');
+
+                objectStore.delete(idToDelete);
+
+                // Si el cliente se elimina exitosamente
+                transaction.oncomplete = () => {
+                    // Eliminar cliente del DOM
+                    e.target.parentElement.parentElement.remove();
+                    console.log('Cliente eliminado correctamente');
+                };
+
+                // Si ocurre un error
+                transaction.onerror = () => console.error('Ocurrio un error al borrar el cliente');
+            }
+        }
     }
 })();
