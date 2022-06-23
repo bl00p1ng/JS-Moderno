@@ -1,6 +1,6 @@
 {
      "id" : 1,
-     "nombre" : "Juan",
-     "empresa" : "Código Con Juan",
-     "trabajo" : "Desarrollador Web"
+     "name" : "Juan",
+     "enterprise" : "Código Con Juan",
+     "job" : "Desarrollador Web"
 }
