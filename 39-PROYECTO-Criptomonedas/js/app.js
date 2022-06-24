@@ -72,6 +72,9 @@ function validateForm(e) {
         showAlert('Ambos campos son obligatorios');
         return;
     }
+
+    // Consultar la API con los resultados
+    consultAPI();
 }
 
 // Mostrar una alerta en la UI
@@ -89,4 +92,21 @@ function showAlert(msg) {
             alert.remove();
         }, 3000);
     }
+}
+
+// Consultar la API con los terminos de busqueda ingresados por el usuario
+function consultAPI() {
+    // Construir la URL
+    const {currency, cryptocurrency} = searchTerms;
+    const url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${cryptocurrency}&tsyms=${currency}`;
+
+    fetch(url)
+        .then(response => response.json())
+        .then(result => showData(result.DISPLAY[cryptocurrency][currency]))
+        .catch(err => console.error(err));
+}
+
+// Mostrar los resultados de la cotización en la API
+function showData(prices) {
+    console.log(prices);
 }
