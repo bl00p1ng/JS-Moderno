@@ -7,6 +7,8 @@ const result = document.querySelector('#resultado');
 const recordsPerPage = 40;
 // Cantidad de páginas requeridas para mostrar todas las imágenes
 let totalPages;
+// Generador de la paginación
+let iterator;
 
 // ********** EVENT LISTENERS **********
 form.addEventListener('submit', validateForm);
@@ -72,7 +74,6 @@ function searchImages(searchTerm) {
         .then(result => {
             // Calcular la cantidad de paginas necesarias para mostrar las imágenes
             totalPages = calculatePages(result.totalHits);
-            console.log(totalPages);
 
             showImages(result.hits);
         })
@@ -106,11 +107,26 @@ function showImages(images) {
             </div>
         `;
     });
+
+    showPagination();
 }
 
 // Calcular la cantidad de páginas necesarias para mostrar todas las imágenes
 function calculatePages(total) {
     return parseInt(Math.ceil(total / recordsPerPage));
+}
+
+// Generador que va a registrar la cantidad de elementos de acuerdo a las páginas
+function *createPagination(total) {
+    for (let i = 1; i <= total; i++) {
+        yield i;
+    }
+}
+
+// Mostrar la paginación
+function showPagination() {
+    iterator = createPagination(totalPages);
+    console.log(iterator.next());
 }
 
 // Eliminar el HTML previo de .resultado
