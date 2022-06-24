@@ -1,4 +1,5 @@
 import * as UI from './ui.js'
+import API from './api.js'
 
 // ********** EVENT LISTENERS **********
 UI.form.addEventListener('submit', searchSong);
@@ -17,6 +18,10 @@ function searchSong(e) {
         showError('Ambos campos son obligatorios');
         return;
     }
+
+    // Consultar API
+    const search = new API(artist, song);
+    search.consultAPI();
 }
 
 // Mostrar un mensaje de error en la interfaz
