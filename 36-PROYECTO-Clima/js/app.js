@@ -1,3 +1,6 @@
+// API Key Open Weather
+import {API_KEY} from './api_key.js'
+
 // ********** SELECTORES **********
 const container = document.querySelector('.container');
 const result = document.querySelector('#result');
@@ -22,6 +25,9 @@ function searchWeather(e) {
         showError('Ambos campos son obligatorios');
         return;
     }
+
+    // Consultar API
+    consultAPI(city, country);
 }
 
 // Mostrar un mensaje de error en la UI
@@ -51,4 +57,23 @@ function showError(errorMsg) {
             alert.remove();
         }, 3000);
     }
+}
+
+// Consultar el clima a la API
+function consultAPI(city, country) {
+    // Construir URL
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${API_KEY}`;
+
+    // Consultar API
+    fetch(url)
+        .then(response => response.json())
+        .then(result => {
+            console.log(result);
+
+            // Validar si la ciudad no existe
+            if (result.cod === '404') {
+                showError('La ciudad buscada no existe')
+            }
+        })
+        .catch((err) => console.error(err));
 }
