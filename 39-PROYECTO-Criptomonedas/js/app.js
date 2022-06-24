@@ -76,5 +76,17 @@ function validateForm(e) {
 
 // Mostrar una alerta en la UI
 function showAlert(msg) {
-    console.log(msg);
+    // Validar que no se muestre más de una alerta a la vez
+    if (!document.querySelector('.error')) {
+        const alert = document.createElement('div');
+        alert.classList.add('error');
+        alert.textContent = msg;
+    
+        form.appendChild(alert);
+
+        // Ocultar alerta después de 3 segundos
+        setTimeout(() => {
+            alert.remove();
+        }, 3000);
+    }
 }
