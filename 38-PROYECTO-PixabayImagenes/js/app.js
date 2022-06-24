@@ -18,6 +18,9 @@ function validateForm(e) {
         showAlert('Agrega un término de búsqueda');
         return;
     }
+
+    // Consultar API
+    searchImages(searchTerm);
 }
 
 // Mostrar un mensaje de alerta en la UI
@@ -49,4 +52,22 @@ function showAlert(alertMsg) {
             alert.remove();
         }, 3000);
     }
+}
+
+// Buscar imágenes en la API con base en el término de búsqueda
+function searchImages(searchTerm) {
+    const API_KEY = '28253743-7c242eb0322bed2882b255c3b';
+
+    // Construir URL
+    const url = `https://pixabay.com/api/?key=${API_KEY}&q=${searchTerm}`;
+    
+    fetch(url)
+        .then(response => response.json())
+        .then(result => showImages(result.hits))
+        .catch(err => console.error(err));
+}
+
+// Mostrar las imágenes traidas de la API en la UI
+function showImages(images) {
+    console.log(images);
 }
