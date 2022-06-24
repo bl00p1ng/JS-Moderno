@@ -85,19 +85,39 @@ function consultAPI(city, country) {
 
 // Mostrar los resultados del clima en el HTML
 function showWeather(weatherData) {
-    const {main: {temp, temp_max, temp_min}} = weatherData;
+    const {name, main: {temp, temp_max, temp_min}} = weatherData;
 
-    const cent = kelvinToCentigrades(temp);
+    const cityName = document.createElement('p');
+    cityName.classList.add('font-bold', 'text-2xl');
+    cityName.textContent = `Clima en ${name}`;
+
+    // Convertir temperatura a grados centigrados
+    const currentTemp = kelvinToCentigrades(temp);
+    const maxTemp = kelvinToCentigrades(temp_max);
+    const minTemp = kelvinToCentigrades(temp_min);
 
     // Muestra temperatura actual en la ciudad
-    const currentTemp = document.createElement('p');
-    currentTemp.classList.add('font-bold', 'text-6xl');
-    currentTemp.innerHTML = `${cent} &#8451;`
+    const current = document.createElement('p');
+    current.classList.add('font-bold', 'text-6xl');
+    current.innerHTML = `${currentTemp} &#8451;`
+
+    // Mostrar temperatura máxima
+    const max = document.createElement('p');
+    max.classList.add('text-xl');
+    max.innerHTML = `Max: ${maxTemp} &#8451;`
+
+    // Mostrar temperatura mínima
+    const min = document.createElement('p');
+    min.classList.add('text-xl');
+    min.innerHTML = `Min: ${minTemp} &#8451;`
 
     // Div con el clima de la ciudad
     const weatherDiv = document.createElement('div');
     weatherDiv.classList.add('text-center', 'text-white');
-    weatherDiv.appendChild(currentTemp);
+    weatherDiv.appendChild(cityName);
+    weatherDiv.appendChild(current);
+    weatherDiv.appendChild(max);
+    weatherDiv.appendChild(min);
 
     result.appendChild(weatherDiv);
 }
