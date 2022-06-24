@@ -59,7 +59,7 @@ function searchImages(searchTerm) {
     const API_KEY = '28253743-7c242eb0322bed2882b255c3b';
 
     // Construir URL
-    const url = `https://pixabay.com/api/?key=${API_KEY}&q=${searchTerm}`;
+    const url = `https://pixabay.com/api/?key=${API_KEY}&q=${searchTerm}&per_page=100`;
     
     fetch(url)
         .then(response => response.json())
@@ -69,5 +69,36 @@ function searchImages(searchTerm) {
 
 // Mostrar las imágenes traidas de la API en la UI
 function showImages(images) {
-    console.log(images);
+    // Limpiar HTML
+    clearHTML();
+
+    // Iterar sobre las imagenes y construir el HTML
+    images.forEach(image => {
+        const {previewURL, likes, views, largeImageURL} = image;
+
+        result.innerHTML += `
+            <div class="w-1/2 md:w-1/4 lg:1/5 p-3 mb-4">
+                <div class="bg-white">
+                    <img class="w-full" src="${previewURL}">
+                    <div class="p-4">
+                        <p><span class="font-bold">${likes}</span> Likes</p>
+                        <p><span class="font-bold">${views}</span> veces vista</p>
+                        <a 
+                            class="block w-full bg-blue-800 hover:bg-blue-500 text-white uppercase font-bold text-center rounded mt-5 p-1"
+                            href="${largeImageURL}" target="_blank" rel="noopener noreferrer"
+                        >
+                            Ver Imagen
+                        </a>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+}
+
+// Eliminar el HTML previo de .resultado
+function clearHTML() {
+    while (result.firstChild) {
+        result.removeChild(result.firstChild);
+    }
 }
