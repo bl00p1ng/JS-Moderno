@@ -10,6 +10,8 @@ const recordsPerPage = 40;
 let totalPages;
 // Generador de la paginación
 let iterator;
+// Página actual en el paginador
+let currentPage = 1;
 
 // ********** EVENT LISTENERS **********
 form.addEventListener('submit', validateForm);
@@ -29,7 +31,7 @@ function validateForm(e) {
     }
 
     // Consultar API
-    searchImages(searchTerm);
+    searchImages();
 }
 
 // Mostrar un mensaje de alerta en la UI
@@ -64,11 +66,13 @@ function showAlert(alertMsg) {
 }
 
 // Buscar imágenes en la API con base en el término de búsqueda
-function searchImages(searchTerm) {
+function searchImages() {
     const API_KEY = '28253743-7c242eb0322bed2882b255c3b';
+    // Termino a buscar
+    const searchTerm = document.querySelector('#termino').value;
 
     // Construir URL
-    const url = `https://pixabay.com/api/?key=${API_KEY}&q=${searchTerm}&per_page=${recordsPerPage}`;
+    const url = `https://pixabay.com/api/?key=${API_KEY}&q=${searchTerm}&per_page=${recordsPerPage}&page=${currentPage}`;
     
     fetch(url)
         .then(response => response.json())
@@ -148,9 +152,17 @@ function showPagination() {
                              'px-4', 'py-1', 
                              'mr-2', 
                              'font-bold', 
-                             'mb-4', 
-                             'uppercase', 
+                             'mb-4',
                              'rounded');
+
+        // Asigna el valor del paginador como la página a consultar a la API
+        button.onclick = () => {
+            currentPage = value;
+
+            // Consultar la API con la pagina seleccionada
+            searchImages();
+        };
+
         pagination.appendChild(button);
     }
 }
