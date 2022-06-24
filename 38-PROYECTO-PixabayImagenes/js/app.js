@@ -1,6 +1,7 @@
 // ********** SELECTORES **********
 const form = document.querySelector('#formulario');
 const result = document.querySelector('#resultado');
+const pagination = document.querySelector('#paginacion');
 
 // ********** VARIABLES **********
 // Cantidad de imágenes a mostrar por página
@@ -67,7 +68,7 @@ function searchImages(searchTerm) {
     const API_KEY = '28253743-7c242eb0322bed2882b255c3b';
 
     // Construir URL
-    const url = `https://pixabay.com/api/?key=${API_KEY}&q=${searchTerm}&per_page=100`;
+    const url = `https://pixabay.com/api/?key=${API_KEY}&q=${searchTerm}&per_page=${recordsPerPage}`;
     
     fetch(url)
         .then(response => response.json())
@@ -83,7 +84,7 @@ function searchImages(searchTerm) {
 // Mostrar las imágenes traidas de la API en la UI
 function showImages(images) {
     // Limpiar HTML
-    clearHTML();
+    clearHTML(result);
 
     // Iterar sobre las imagenes y construir el HTML
     images.forEach(image => {
@@ -125,13 +126,38 @@ function *createPagination(total) {
 
 // Mostrar la paginación
 function showPagination() {
+    // Limpiar HTML
+    clearHTML(pagination);
+
     iterator = createPagination(totalPages);
-    console.log(iterator.next());
+
+    while (true) {
+        const {value, done} = iterator.next();
+        
+        // Detener ejecución al llegar al último elemento
+        if (done) return;
+
+
+        // Generador un botón de paginación por cada elemento en el generador
+        const button = document.createElement('a');
+        button.href = '#';
+        button.dataset.page = value;
+        button.textContent = value;
+        button.classList.add('siguiente', 
+                             'bg-yellow-400',
+                             'px-4', 'py-1', 
+                             'mr-2', 
+                             'font-bold', 
+                             'mb-4', 
+                             'uppercase', 
+                             'rounded');
+        pagination.appendChild(button);
+    }
 }
 
-// Eliminar el HTML previo de .resultado
-function clearHTML() {
-    while (result.firstChild) {
-        result.removeChild(result.firstChild);
+// Eliminar el HTML previo de una sección del DOM
+function clearHTML(section) {
+    while (section.firstChild) {
+        section.removeChild(section.firstChild);
     }
 }
