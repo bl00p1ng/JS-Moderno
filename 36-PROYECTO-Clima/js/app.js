@@ -3,7 +3,7 @@ import {API_KEY} from './api_key.js'
 
 // ********** SELECTORES **********
 const container = document.querySelector('.container');
-const result = document.querySelector('#result');
+const result = document.querySelector('#resultado');
 const form = document.querySelector('#formulario');
 
 // ********** EVENT LISTENERS **********
@@ -68,12 +68,46 @@ function consultAPI(city, country) {
     fetch(url)
         .then(response => response.json())
         .then(result => {
-            console.log(result);
+            // Limpiar HTML
+            clearHTML();
 
             // Validar si la ciudad no existe
             if (result.cod === '404') {
-                showError('La ciudad buscada no existe')
+                showError('La ciudad buscada no existe');
+                return;
             }
+
+            // Mostrar clima en la UI
+            showWeather(result);
         })
         .catch((err) => console.error(err));
+}
+
+// Mostrar los resultados del clima en el HTML
+function showWeather(weatherData) {
+    const {main: {temp, temp_max, temp_min}} = weatherData;
+
+    const cent = kelvinToCentigrades(temp);
+
+    // Muestra temperatura actual en la ciudad
+    const currentTemp = document.createElement('p');
+    currentTemp.classList.add('font-bold', 'text-6xl');
+    currentTemp.innerHTML = `${cent} &#8451;`
+
+    // Div con el clima de la ciudad
+    const weatherDiv = document.createElement('div');
+    weatherDiv.classList.add('text-center', 'text-white');
+    weatherDiv.appendChild(currentTemp);
+
+    result.appendChild(weatherDiv);
+}
+
+// Convertir grados Kelvin a Centigrados
+const kelvinToCentigrades = degrees => Math.round(degrees - 273.15)
+
+// Limpiar elementos existentes en el DOM
+function clearHTML() {
+    while (result.firstChild) {
+        result.removeChild(result.firstChild);
+    }
 }
