@@ -1,9 +1,26 @@
 // ********** SELECTORES **********
 const cryptocurrenciesSelect = document.querySelector('#criptomonedas');
+const currenciesSelect = document.querySelector('#moneda');
+const form = document.querySelector('#formulario');
+
+// ********** VARIABLES **********
+// Almacena los datos para hacer la petición a la API
+const searchTerms = {
+    currency: '',
+    cryptocurrency: ''
+};
 
 // ********** EVENT LISTENERS **********
 document.addEventListener('DOMContentLoaded', () => {
+    // Obtener las criptomonedas a seleccionar
     consultCryptocurrencies();
+
+    // Validar form al enviar
+    form.addEventListener('submit', validateForm);
+
+    // Obtener los datos de cada select
+    cryptocurrenciesSelect.addEventListener('change', readData);
+    currenciesSelect.addEventListener('change', readData);
 });
 
 // ********** FUNCIONES **********
@@ -36,4 +53,28 @@ function createSelectCrypto(cryptocurrencies) {
 
         cryptocurrenciesSelect.appendChild(option);
     });
+}
+
+// Leer los datos del select
+function readData(e) {
+    searchTerms[e.target.name] = e.target.value;
+    console.log(searchTerms);
+}
+
+// Validar los datos del form
+function validateForm(e) {
+    e.preventDefault();
+
+    // Validar que no exista un campo vacio
+    const {currency, cryptocurrency} = searchTerms;
+
+    if (currency === '' || cryptocurrency === '') {
+        showAlert('Ambos campos son obligatorios');
+        return;
+    }
+}
+
+// Mostrar una alerta en la UI
+function showAlert(msg) {
+    console.log(msg);
 }
