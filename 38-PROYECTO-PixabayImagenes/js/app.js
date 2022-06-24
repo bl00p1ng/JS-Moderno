@@ -2,6 +2,12 @@
 const form = document.querySelector('#formulario');
 const result = document.querySelector('#resultado');
 
+// ********** VARIABLES **********
+// Cantidad de imágenes a mostrar por página
+const recordsPerPage = 40;
+// Cantidad de páginas requeridas para mostrar todas las imágenes
+let totalPages;
+
 // ********** EVENT LISTENERS **********
 form.addEventListener('submit', validateForm);
 
@@ -63,7 +69,13 @@ function searchImages(searchTerm) {
     
     fetch(url)
         .then(response => response.json())
-        .then(result => showImages(result.hits))
+        .then(result => {
+            // Calcular la cantidad de paginas necesarias para mostrar las imágenes
+            totalPages = calculatePages(result.totalHits);
+            console.log(totalPages);
+
+            showImages(result.hits);
+        })
         .catch(err => console.error(err));
 }
 
@@ -94,6 +106,11 @@ function showImages(images) {
             </div>
         `;
     });
+}
+
+// Calcular la cantidad de páginas necesarias para mostrar todas las imágenes
+function calculatePages(total) {
+    return parseInt(Math.ceil(total / recordsPerPage));
 }
 
 // Eliminar el HTML previo de .resultado
