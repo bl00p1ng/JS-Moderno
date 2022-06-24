@@ -2,6 +2,7 @@
 const cryptocurrenciesSelect = document.querySelector('#criptomonedas');
 const currenciesSelect = document.querySelector('#moneda');
 const form = document.querySelector('#formulario');
+const result = document.querySelector('#resultado');
 
 // ********** VARIABLES **********
 // Almacena los datos para hacer la petición a la API
@@ -58,7 +59,6 @@ function createSelectCrypto(cryptocurrencies) {
 // Leer los datos del select
 function readData(e) {
     searchTerms[e.target.name] = e.target.value;
-    console.log(searchTerms);
 }
 
 // Validar los datos del form
@@ -102,11 +102,51 @@ function consultAPI() {
 
     fetch(url)
         .then(response => response.json())
-        .then(result => showData(result.DISPLAY[cryptocurrency][currency]))
+        .then(result => {
+            // Limpiar HTML
+            clearHTML();
+            showData(result.DISPLAY[cryptocurrency][currency]);
+        })
         .catch(err => console.error(err));
 }
 
 // Mostrar los resultados de la cotización en la API
 function showData(prices) {
-    console.log(prices);
+    // Extraer los datos a mostrar
+    const {PRICE, HIGHDAY, LOWDAY, CHANGEPCT24HOUR, LASTUPDATE} = prices;
+
+    // Precio
+    const price = document.createElement('p');
+    price.classList.add('precio');
+    price.innerHTML = `El precio es: <span>${PRICE}</span>`;
+
+    // Precio más alto en el dia
+    const highPrice = document.createElement('p');
+    highPrice.innerHTML = `Precio más alto del día: <span>${HIGHDAY}</span>`;
+
+    // Precio más bajo en el dia
+    const lowPrice = document.createElement('p');
+    lowPrice.innerHTML = `Precio más bajo del día: <span>${LOWDAY}</span>`;
+
+    // Cambio de precio en las últimas 24 horas
+    const last24Hours = document.createElement('p');
+    last24Hours.innerHTML = `Variación en las últimas 24 horas: <span>${CHANGEPCT24HOUR}%</span>`;
+
+    // Tiempo desde la última actualización
+    const lastUpdate = document.createElement('p');
+    lastUpdate.innerHTML = `Última actualización: <span>${LASTUPDATE}</span>`;
+
+    // Agregar elementos a la UI
+    result.appendChild(price);
+    result.appendChild(highPrice);
+    result.appendChild(lowPrice);
+    result.appendChild(last24Hours);
+    result.appendChild(lastUpdate);
+}
+
+// Limpiar el HTML de los resultados
+function clearHTML() {
+    while (result.firstChild) {
+        result.removeChild(result.firstChild);
+    }
 }
