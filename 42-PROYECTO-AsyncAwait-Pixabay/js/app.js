@@ -1,103 +1,111 @@
-const resultado = document.querySelector('#resultado');
-const formulario = document.querySelector('#formulario');
-const paginacionDiv = document.querySelector('#paginacion');
+// ********** SELECTORES **********
+const form = document.querySelector('#formulario');
+const result = document.querySelector('#resultado');
+const pagination = document.querySelector('#paginacion');
 
-const registrosPorPagina = 40;
-let totalPaginas;
-let iterador;
-let paginaActual = 1;
+// ********** VARIABLES **********
+// Cantidad de imágenes a mostrar por página
+const recordsPerPage = 40;
+// Cantidad de páginas requeridas para mostrar todas las imágenes
+let totalPages;
+// Generador de la paginación
+let iterator;
+// Página actual en el paginador
+let currentPage = 1;
 
+// ********** EVENT LISTENERS **********
+form.addEventListener('submit', validateForm);
 
-window.onload = () => {
-    formulario.addEventListener('submit', validarFormulario);
-}
-
-function validarFormulario(e) {
+// ********** FUNCIONES **********
+// Validar los campos del form
+function validateForm(e) {
     e.preventDefault();
-    
-    const terminoBusqueda = document.querySelector('#termino').value;
-    
-    if(terminoBusqueda === '' ) {
-        mostrarAlerta('Agrega un término de búsqueda');
+
+    // Obtener datos del form
+    const searchTerm = document.querySelector('#termino').value;
+
+    // Validar que el campo no este vacio
+    if (searchTerm === '') {
+        showAlert('Agrega un término de búsqueda');
         return;
     }
 
-    buscarImagenes();
+    // Consultar API
+    searchImages();
 }
 
-function mostrarAlerta(mensaje) {
-
-    const existeAlerta = document.querySelector('.bg-red-100');
-
-    if(!existeAlerta) {
-        const alerta = document.createElement('p');
-        alerta.classList.add('bg-red-100', 'border-red-400', 'text-red-700', 'px-4', 'py-3', 'rounded', 'max-w-lg', 'mx-auto', 'mt-6', 'text-center');
+// Mostrar un mensaje de alerta en la UI
+function showAlert(alertMsg) {
+    // Validar que solo se muestre una alerta a la vez
+    if (!document.querySelector('.alert')) {
+        const alert = document.createElement('p');
+        alert.classList.add('alert',
+                            'bg-red-100', 
+                            'border-red-400', 
+                            'text-red-700', 
+                            'px-4', 'py-3', 
+                            'rounded', 
+                            'max-w-lg', 
+                            'mx-auto', 
+                            'mt-6', 
+                            'text-center');
     
-        alerta.innerHTML = `
+        alert.innerHTML = `
             <strong class="font-bold">Error!</strong>
-            <span class="block sm:inline">${mensaje}</span>
+            <span class="block sm:inline">${alertMsg}</span>
         `;
     
-        formulario.appendChild(alerta);
-    
+        // Agregar al HTML
+        form.appendChild(alert);
+
+        // Ocultar alerta después de 3 segundos
         setTimeout(() => {
-            alerta.remove();
+            alert.remove();
         }, 3000);
     }
-    
-
 }
 
-function buscarImagenes() {
+// Buscar imágenes en la API con base en el término de búsqueda
+async function searchImages() {
+    const API_KEY = '28253743-7c242eb0322bed2882b255c3b';
+    // Termino a buscar
+    const searchTerm = document.querySelector('#termino').value;
 
-    const termino = document.querySelector('#termino').value;
+    // Construir URL
+    const url = `https://pixabay.com/api/?key=${API_KEY}&q=${searchTerm}&per_page=${recordsPerPage}&page=${currentPage}`;
 
-    const key = '';
-    const url = `https://pixabay.com/api/?key=${key}&q=${termino}&per_page=${registrosPorPagina}&page=${paginaActual}`;
+    try {
+        const response = await fetch(url);
+        const result = await response.json();
 
-    fetch(url)
-        .then(respuesta => respuesta.json())
-        .then(resultado => {
-            totalPaginas = calcularPaginas(resultado.totalHits);
-            mostrarImagenes(resultado.hits);
-        })
-}
-
-// Generador que va a registrar la cantidad de elementos de acuerdo a las paginas
-function *crearPaginador(total) {
-    for (let i = 1; i <= total; i++ ) {
-        yield i;
+        // Calcular la cantidad de paginas necesarias para mostrar las imágenes
+        totalPages = calculatePages(result.totalHits);
+        // Mostrar las imágenes en el DOM
+        showImages(result.hits);
+    } catch (error) {
+        console.error(error);
     }
 }
 
+// Mostrar las imágenes traidas de la API en la UI
+function showImages(images) {
+    // Limpiar HTML
+    clearHTML(result);
 
-function calcularPaginas(total) {
-    return parseInt( Math.ceil( total / registrosPorPagina ));
-}
+    // Iterar sobre las imagenes y construir el HTML
+    images.forEach(image => {
+        const {previewURL, likes, views, largeImageURL} = image;
 
-function mostrarImagenes(imagenes) {
-    // console.log(imagenes);
-    
-    while(resultado.firstChild) {
-        resultado.removeChild(resultado.firstChild);
-    }
-
-    // Iterar sobre el arreglo de imagenes y construir el HTML
-    imagenes.forEach( imagen => {
-        const { previewURL, likes, views, largeImageURL } = imagen;
-
-        resultado.innerHTML += `
-            <div class="w-1/2 md:w-1/3 lg:w-1/4 p-3 mb-4">
+        result.innerHTML += `
+            <div class="w-1/2 md:w-1/4 lg:1/5 p-3 mb-4">
                 <div class="bg-white">
-                    <img class="w-full" src="${previewURL}" >
-
+                    <img class="w-full" src="${previewURL}">
                     <div class="p-4">
-                        <p class="font-bold"> ${likes} <span class="font-light"> Me Gusta </span> </p>
-                        <p class="font-bold"> ${views} <span class="font-light"> Veces Vista </span> </p>
-
+                        <p><span class="font-bold">${likes}</span> Likes</p>
+                        <p><span class="font-bold">${views}</span> veces vista</p>
                         <a 
                             class="block w-full bg-blue-800 hover:bg-blue-500 text-white uppercase font-bold text-center rounded mt-5 p-1"
-                            href="${largeImageURL}" target="_blank" rel="noopener noreferrer" 
+                            href="${largeImageURL}" target="_blank" rel="noopener noreferrer"
                         >
                             Ver Imagen
                         </a>
@@ -105,40 +113,65 @@ function mostrarImagenes(imagenes) {
                 </div>
             </div>
         `;
-
     });
 
-    // Limpiar el paginador previo
-    while(paginacionDiv.firstChild) {
-        paginacionDiv.removeChild(paginacionDiv.firstChild)
-    }
-
-    // Generamos el nuevo HTML
-    imprimirPaginador();
-
+    showPagination();
 }
 
+// Calcular la cantidad de páginas necesarias para mostrar todas las imágenes
+function calculatePages(total) {
+    return parseInt(Math.ceil(total / recordsPerPage));
+}
 
-function imprimirPaginador() {
-    iterador = crearPaginador(totalPaginas);
+// Generador que va a registrar la cantidad de elementos de acuerdo a las páginas
+function *createPagination(total) {
+    for (let i = 1; i <= total; i++) {
+        yield i;
+    }
+}
 
-    while(true) {
-        const { value, done} = iterador.next();
-        if(done) return;
+// Mostrar la paginación
+function showPagination() {
+    // Limpiar HTML
+    clearHTML(pagination);
 
-        // Caso contrario, genera un botón por cada elemento en el generador
-        const boton = document.createElement('a');
-        boton.href = '#';
-        boton.dataset.pagina = value;
-        boton.textContent = value;
-        boton.classList.add('siguiente', 'bg-yellow-400', 'px-4', 'py-1', 'mr-2', 'font-bold', 'mb-4', 'rounded');
+    iterator = createPagination(totalPages);
 
-        boton.onclick = () => {
-            paginaActual = value;
+    while (true) {
+        const {value, done} = iterator.next();
+        
+        // Detener ejecución al llegar al último elemento
+        if (done) return;
 
-            buscarImagenes();
-        }
 
-        paginacionDiv.appendChild(boton);
+        // Generador un botón de paginación por cada elemento en el generador
+        const button = document.createElement('a');
+        button.href = '#';
+        button.dataset.page = value;
+        button.textContent = value;
+        button.classList.add('siguiente', 
+                             'bg-yellow-400',
+                             'px-4', 'py-1', 
+                             'mr-2', 
+                             'font-bold', 
+                             'mb-4',
+                             'rounded');
+
+        // Asigna el valor del paginador como la página a consultar a la API
+        button.onclick = () => {
+            currentPage = value;
+
+            // Consultar la API con la pagina seleccionada
+            searchImages();
+        };
+
+        pagination.appendChild(button);
+    }
+}
+
+// Eliminar el HTML previo de una sección del DOM
+function clearHTML(section) {
+    while (section.firstChild) {
+        section.removeChild(section.firstChild);
     }
 }
