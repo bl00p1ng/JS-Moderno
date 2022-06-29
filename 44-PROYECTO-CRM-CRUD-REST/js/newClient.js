@@ -1,4 +1,5 @@
 import {showAlert} from './functions.js';
+import {newClient} from './API.js';
 
 (() => {
     // ********** SELECTORES **********
@@ -34,7 +35,8 @@ import {showAlert} from './functions.js';
             return;
         }
 
-        console.log('Si se paso la validación');
+        // Crear un nuevo cliente con los datos ingresados por el usuario
+        newClient(client);
     }
 
     // Validar que no existan campos vacíos en el form. Retorna true si hay un campo vacío
