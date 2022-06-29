@@ -1,3 +1,5 @@
+import {showAlert} from './functions.js';
+
 (() => {
     // ********** SELECTORES **********
     const form = document.querySelector('#formulario');
@@ -28,7 +30,7 @@
         // Revisar si existen campos vacíos
         if (hasEmpty(client)) {
             // Mostrar mensaje de error
-            console.error('Todos los campos son obligatorios');
+            showAlert('Todos los campos son obligatorios');
             return;
         }
 
