@@ -16,3 +16,14 @@ export const newClient = async client => {
         console.error(error);
     }
 };
+
+// Obtener los clientes de la API
+export const getClients = async () => {
+    try {
+        const response = await fetch(url);
+        const clients = await response.json();
+        return clients;
+    } catch (error) {
+        console.error(error);
+    }
+}
