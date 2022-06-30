@@ -29,3 +29,8 @@ export function showAlert(msg) {
         }, 3000);
     }
 }
+
+// Validar que no existan campos vacíos en el form. Retorna true si hay un campo vacío
+export function hasEmpty(clientObject) {
+    return !Object.values(clientObject).every(input => input !== '');
+}

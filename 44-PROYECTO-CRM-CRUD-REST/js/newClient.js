@@ -1,4 +1,4 @@
-import {showAlert} from './functions.js';
+import {showAlert, hasEmpty} from './functions.js';
 import {newClient} from './API.js';
 
 (() => {
@@ -38,10 +38,4 @@ import {newClient} from './API.js';
         // Crear un nuevo cliente con los datos ingresados por el usuario
         newClient(client);
     }
-
-    // Validar que no existan campos vacíos en el form. Retorna true si hay un campo vacío
-    function hasEmpty(clientObject) {
-        return !Object.values(clientObject).every(input => input !== '');
-    }
-
 })();

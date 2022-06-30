@@ -50,3 +50,20 @@ export const getClientByID = async id => {
         console.error(error);
     }
 }
+
+// Actualizar un cliente
+export const updateClient = async clientUpdated => {
+    try {
+        await fetch(`${url}/${clientUpdated.id}`, {
+            method: 'PUT',
+            body: JSON.stringify(clientUpdated),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        window.location.href = 'index.html';
+    } catch (error) {
+        console.error(error);
+    }
+}
