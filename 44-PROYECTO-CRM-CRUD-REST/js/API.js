@@ -27,3 +27,15 @@ export const getClients = async () => {
         console.error(error);
     }
 }
+
+// Eliminar un cliente de la DB
+export const deleteRecord = async id => {
+    try {
+        await fetch(`${url}/${id}`, {
+            method: 'DELETE',
+            
+        });
+    } catch (error) {
+        console.error(error);
+    }
+}

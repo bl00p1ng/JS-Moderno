@@ -1,11 +1,14 @@
-import {getClients} from './API.js';
+import {getClients, deleteRecord} from './API.js';
 
 (() => {
     // ********** SELECTORES **********
     const clientsList = document.querySelector('#listado-clientes');
 
     // ********** EVENT LISTENERS **********
+    // Mostrar los clientes al terminar de cargar la página
     document.addEventListener('DOMContentLoaded', showClients);
+    // Pulsar el botón de eliminar
+    clientsList.addEventListener('click', deleteClient);
 
     // ********** FUNCIONES **********
     // Mostrar el listado de clientes en la UI
@@ -31,11 +34,27 @@ import {getClients} from './API.js';
                 </td>
                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200 text-sm leading-5">
                     <a class="text-teal-600 hover:text-teal-900 mr-5" href="editar-cliente.html?id=${id}">Editar</a>
-                    <a class="text-red-500 hover:text-red-900 eliminar" href="#" data-client="${id}">Eliminar</a>
+                    <a class="text-red-500 hover:text-red-900 delete" href="#" data-client="${id}">Eliminar</a>
                 </td>
             `;
 
             clientsList.appendChild(row);
         });
+    }
+
+    // Eliminar un cliente
+    function deleteClient(e) {
+        // Verificar si se está pulsando el botón de eliminar
+        if (e.target.classList.contains('delete')) {
+            const clientID = parseInt(e.target.dataset.client);
+
+            // Confirmar la acción de eliminar
+            const confirmDelete = confirm('¿Deseas eliminar este registro?');
+
+            // Eliminar registro
+            if (confirmDelete) {
+                deleteRecord(clientID);
+            }
+        }
     }
 })();

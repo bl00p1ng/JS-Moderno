@@ -1,13 +1,6 @@
 {
   "clients": [
     {
-      "name": "Juan NUEVO!",
-      "email": "correo2@correo.com",
-      "phone": "12",
-      "enterprise": "12212",
-      "id": 26
-    },
-    {
       "name": "Andrés",
       "email": "andres@spotify.com",
       "phone": "23403458",
