@@ -1,5 +1,5 @@
 // Nombre del cache
-const cacheName = 'apv-v1';
+const cacheName = 'apv-v2';
 // Archivos que se van a cachear para cuando la App este offline
 const archives = [
     '/',
@@ -29,6 +29,18 @@ self.addEventListener('install', e => {
 // Cuando se activa el service worker
 self.addEventListener('activate', e => {
     console.log('Service worker activado', e);
+
+    e.waitUntil(
+        // Obtener los keys de la cache
+        caches.keys()
+            .then(keys => {
+                return Promise.all(
+                    // Eliminar las versiones anteriores de la cache
+                    keys.filter(key => key !== cacheName)
+                        .map(key => caches.delete(key))
+                );
+            })
+    );
 });
 
 // Evento fetch para registrar archivos estáticos
