@@ -4,6 +4,7 @@ const cacheName = 'apv-v1';
 const archives = [
     '/',
     '/index.html',
+    '/error.html',
     '/css/bootstrap.css',
     '/css/styles.css',
     '/js/app.js',
@@ -35,14 +36,20 @@ self.addEventListener('fetch', e => {
     console.log('Fetch...', e);
 
     // Evitar la respuesta de fetch por defecto y expecificar una manualmente
-    e.respondWith(async function() {
+    e.respondWith(
+    
         // Intentar obtener la respuesta del cache
-        const cachedResponse = await caches.match(e.request);
-        /* Si lo que se solicita en el request es igual a lo que esta 
-        en cache, se carga el archivo de la cache */
-        if (cachedResponse) return cachedResponse;
+        caches.match(e.request)
+            .then(cachedResponse => {
+                /* Si lo que se solicita en el request es igual a lo que esta 
+                en cache, se carga el archivo de la cache */
+                if (cachedResponse) return cachedResponse;
 
-        /* Si no encuentra una coincidencia en la cache, se utiliza la red */
-        return fetch(e.request);
-    }());
+                /* Si no encuentra una coincidencia en la cache, se utiliza la red */
+                return fetch(e.request);
+            })
+             /* Si se hace un request a algo que no esta en cache se manda al 
+            usuario a la página de error */
+            .catch(() => caches.match('/error.html'))
+    );
 });
