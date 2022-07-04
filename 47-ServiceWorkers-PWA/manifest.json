@@ -1,8 +1,8 @@
 {
     "name": "Administrador de Pacientes Veterinaria",
     "short_name": "APV",
-    "start_url": "/47-ServiceWorkers-PWA/index.html",
-    "scope": "/47-ServiceWorkers-PWA/index.html",
+    "start_url": "/index.html",
+    "scope": "/index.html",
     "display": "standalone",
     "background_color": "#D41872",
     "theme_color": "#D41872",
