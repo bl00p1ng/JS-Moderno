@@ -13,13 +13,13 @@ const archives = [
 
 // Cuando se instala el service worker
 self.addEventListener('install', e => {
-    console.log('Se instalo el service worker');
+    // console.log('Se instalo el service worker');
 
     // Esperar hasta que se terminen de descargar los archivos de cache
     e.waitUntil(
         caches.open(cacheName)
             .then(cache => {
-                console.log('Guardando en cache...');
+                // console.log('Guardando en cache...');
                 // Añadir archivos a la cache
                 cache.addAll(archives);
             })
@@ -28,7 +28,7 @@ self.addEventListener('install', e => {
 
 // Cuando se activa el service worker
 self.addEventListener('activate', e => {
-    console.log('Service worker activado', e);
+    // console.log('Service worker activado', e);
 
     e.waitUntil(
         // Obtener los keys de la cache
@@ -45,7 +45,7 @@ self.addEventListener('activate', e => {
 
 // Evento fetch para registrar archivos estáticos
 self.addEventListener('fetch', e => {
-    console.log('Fetch...', e);
+    // console.log('Fetch...', e);
 
     // Evitar la respuesta de fetch por defecto y expecificar una manualmente
     e.respondWith(
