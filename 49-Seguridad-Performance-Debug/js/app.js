@@ -54,7 +54,7 @@ function selectCriptomonedas(criptomonedas) {
 }
 
 
-function leerValor(e)  {
+function leerValor(e) {
     objBusqueda[e.target.name] = e.target.value;
 }
 
@@ -62,7 +62,7 @@ function submitFormulario(e) {
     e.preventDefault();
 
     // Extraer los valores
-    const { moneda, criptomoneda} = objBusqueda;
+    const {moneda, criptomoneda} = objBusqueda;
 
     if(moneda === '' || criptomoneda === '') {
         mostrarAlerta('Ambos campos son obligatorios');
@@ -113,8 +113,7 @@ function mostrarCotizacionHTML(cotizacion) {
     limpiarHTML();
 
     console.log(cotizacion);
-    const  { PRICE, HIGHDAY, LOWDAY, CHANGEPCT24HOUR, LASTUPDATE } = cotizacion;
-
+    const  { PRICE, HIGHDAY, LOWDAY, CHANGEPCT24HOUR, LASTUPDATE } = cotizacion;
 
     debugger;
 
