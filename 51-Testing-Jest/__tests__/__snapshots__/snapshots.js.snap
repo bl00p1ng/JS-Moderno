@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Testing al cliente Comprobar nombre, saldo y tipo 1`] = `
+Object {
+  "credit": 500,
+  "name": "Andrés Felipe",
+  "type": "Premium",
+}
+`;
