@@ -7,11 +7,13 @@
     "test": "jest"
   },
   "keywords": [
-    "Jest", "Testing"
+    "Jest",
+    "Testing"
   ],
   "author": "Andrés López",
   "license": "ISC",
   "devDependencies": {
+    "@babel/plugin-transform-modules-commonjs": "^7.18.6",
     "jest": "^28.1.2"
   }
 }
