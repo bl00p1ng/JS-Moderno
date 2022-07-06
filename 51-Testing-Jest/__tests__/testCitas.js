@@ -5,12 +5,12 @@ describe('Probar la clase de Citas', () => {
         const citas = new Citas();
 
         const citaObj = {
-            mascota: '',
-            propietario: '',
-            telefono: '',
-            fecha: '',
-            hora:'',
-            sintomas: ''
+            mascota: 'Luna',
+            propietario: 'Andrés',
+            telefono: '4618923',
+            fecha: '22-07-2022',
+            hora:'10:30',
+            sintomas: 'No come'
         }
 
         citaObj.id = Date.now();
