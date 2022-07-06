@@ -9,7 +9,6 @@ const findBrowser = () => {
   return execa(browserPath, ['--version']).then((result) => {
     // STDOUT will be like "Brave Browser 77.0.69.135"
     const [, version] = /Vivaldi (\d+\.\d+\.\d+\.\d+)/.exec(result.stdout);
-    console.log(version);
     // const [, version] = /vivaldi 5.3.2679.68
     const majorVersion = parseInt(version.split('.')[0]);
 
