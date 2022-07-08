@@ -19,6 +19,9 @@ class UI {
             divMensaje.classList.add('alert-success');
         }
 
+        // Agregar atributo data-cy
+        divMensaje.dataset.cy = 'alert';
+
         // Mensaje de error
         divMensaje.textContent = mensaje;
 
