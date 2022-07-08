@@ -1,0 +1,29 @@
+{
+  "name": "53-webpack-eslint",
+  "version": "1.0.0",
+  "description": "Aprendiendo Webpack, Babel y ESLint",
+  "main": "index.js",
+  "scripts": {
+    "babel": "babel test.js --out-file out.js --presets=@babel/preset-env"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bl00p1ng/JS-Moderno.git"
+  },
+  "keywords": [
+    "Webpack",
+    "Babel",
+    "ESLint"
+  ],
+  "author": "Andrés López",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bl00p1ng/JS-Moderno/issues"
+  },
+  "homepage": "https://github.com/bl00p1ng/JS-Moderno#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.18.6",
+    "@babel/core": "^7.18.6",
+    "@babel/preset-env": "^7.18.6"
+  }
+}
