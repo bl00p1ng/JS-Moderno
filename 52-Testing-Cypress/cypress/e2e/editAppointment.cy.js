@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-describe('Llena los campos para crear una nueva cita y la muestra', () => {
+describe('Llena los campos para crear una nueva cita y la edita', () => {
     it('Campos para crear una nueva cita', () => {
         // Abrir el proyecto
         cy.visit('index.html');
@@ -28,11 +28,32 @@ describe('Llena los campos para crear una nueva cita y la muestra', () => {
             .invoke('text')
             .should('equal', 'Administra tus Citas');
 
-        // Seleccionar la alerta de cita creada
+        // Verificar la alerta de cita creada
         cy.get('[data-cy="alert"]')
             // Revisar que tenga la clase correcta
             .should('have.class', 'alert-success')
             .invoke('text')  // Obtener el texto del elemento
             .should('equal', 'Se agregó correctamente');
+    });
+
+    it('Editar la cita', () => {
+        cy.get('[data-cy="edit-btn"]')
+            .click();
+
+        // Editar el nombre de la mascota
+        cy.get('[data-cy="pet-input"]')
+            .clear()
+            .type('Lunita');
+
+        // Enviar form
+        cy.get('[data-cy="submit-appointment"]')
+            .click();
+
+        // Verificar la alerta de cita creada
+        cy.get('[data-cy="alert"]')
+            // Revisar que tenga la clase correcta
+            .should('have.class', 'alert-success')
+            .invoke('text')  // Obtener el texto del elemento
+            .should('equal', 'Guardado Correctamente');
     });
 });

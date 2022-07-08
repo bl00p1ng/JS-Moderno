@@ -8,6 +8,13 @@ class UI {
     }
 
     imprimirAlerta(mensaje, tipo) {
+        // Eliminar alerta previa
+        const prevAlert = document.querySelector('.alert');
+
+        if (prevAlert) {
+            prevAlert.remove();
+        }
+
         // Crea el div
         const divMensaje = document.createElement('div');
         divMensaje.classList.add('text-center', 'alert', 'd-block', 'col-12');
@@ -79,6 +86,9 @@ class UI {
             // Añade un botón de editar...
             const btnEditar = document.createElement('button');
             btnEditar.onclick = () => cargarEdicion(cita);
+
+            // Dataset de Cypress
+            btnEditar.dataset.cy = 'edit-btn';
 
 
             btnEditar.classList.add('btn', 'btn-info');
