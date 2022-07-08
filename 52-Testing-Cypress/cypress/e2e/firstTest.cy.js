@@ -3,7 +3,7 @@
 describe('Carga la página principal', () => {
     it('Carga la página principal', () => {
         // Abrir el proyecto
-        cy.visit('http://127.0.0.1:5500/52-Testing-Cypress/');
+        cy.visit('index.html');
 
         // Verificar elemento y su texto
         cy.contains('[data-cy="project-title"]', 'Administrador de Pacientes de Veterinaria');
