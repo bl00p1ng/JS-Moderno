@@ -4,7 +4,7 @@
   "description": "Aprendiendo Webpack, Babel y ESLint",
   "main": "index.js",
   "scripts": {
-    "babel": "babel test.js --out-file out.js --presets=@babel/preset-env"
+    "webpack": "webpack"
   },
   "repository": {
     "type": "git",
@@ -24,6 +24,8 @@
   "devDependencies": {
     "@babel/cli": "^7.18.6",
     "@babel/core": "^7.18.6",
-    "@babel/preset-env": "^7.18.6"
+    "@babel/preset-env": "^7.18.6",
+    "webpack": "^5.73.0",
+    "webpack-cli": "^4.10.0"
   }
 }
