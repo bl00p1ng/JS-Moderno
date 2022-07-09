@@ -9,9 +9,16 @@ module.exports = {
         filename: 'bundle.js'
     },
     mode: 'development',
+    target: 'web',
     devServer: {
-        static: path.join(__dirname, '/'),
+        static: {
+            directory: path.join(__dirname, '/')
+        },
         compress: true,
+        open: true,
+        hot: false,
+        liveReload: true,
+        watchFiles: ['public/js/*', 'js/*'],
     },
     module:{
         rules: [
