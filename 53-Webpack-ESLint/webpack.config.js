@@ -1,4 +1,5 @@
 const path = require('path');
+const ESLintPlugin = require('eslint-webpack-plugin');
 
 module.exports = {
     entry: {
@@ -20,6 +21,7 @@ module.exports = {
         liveReload: true,
         watchFiles: ['public/js/*', 'js/*'],
     },
+    plugins: [new ESLintPlugin()],
     module:{
         rules: [
             {
